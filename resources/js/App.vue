@@ -1,11 +1,12 @@
 !<template>
     <div>
-        <h1>Hello world</h1>
+        <Navigation />
+        <router-view></router-view>
     </div>
 </template>
 
 <script setup>
-
+    import Navigation from './components/Navigation.vue'
 </script>
 
 <style lang="scss" scoped>
