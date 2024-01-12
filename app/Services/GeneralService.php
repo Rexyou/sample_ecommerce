@@ -14,8 +14,8 @@ class GeneralService{
     {
 
         $validation = [
-            'page_name'=> 'require|between:1,255|regex:/^(\w)+$/',
-            'component'=> 'require|between:1,255|regex:/^(\w)+$/',
+            'page_name'=> 'required|between:1,255|regex:/^(\w)+$/',
+            'component'=> 'required|between:1,255|regex:/^(\w)+$/',
             'order'=> 'sometimes|string|in:asc,desc',
         ];
         $validated = Validator::make($request->all(), $validation);
