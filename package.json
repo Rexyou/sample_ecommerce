@@ -14,6 +14,7 @@
     "dependencies": {
         "@egjs/flicking-plugins": "^4.7.1",
         "@egjs/vue3-flicking": "^4.11.2",
+        "oh-vue-icons": "^1.0.0-rc3",
         "pinia": "^2.1.7",
         "pinia-plugin-persistedstate": "^3.2.1",
         "vue-router": "^4.2.5"

@@ -100,6 +100,8 @@
     .carousel .flicking-pagination-bullet {
         /* background: white !important; */
         border: 1px solid white;
+        width: 12px !important;
+        height: 12px !important;
     }
 
     .carousel .flicking-pagination-bullet-active {

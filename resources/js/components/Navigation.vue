@@ -9,7 +9,9 @@
             <router-link :to="{ name: 'about' }">About</router-link>
         </div>
         <div class="search_bar">
-            
+            <v-icon name="bi-search"/>
+            <v-icon name="bi-people-fill"/>
+            <v-icon name="bi-cart"/>
         </div>
     </div>
 </template>
@@ -25,31 +27,49 @@
         width: 90%;
         margin: 10px auto;
         display: flex;
-        justify-content:space-around;
+        justify-content:space-between;
         left:0;
         right:0;
     }
 
     .navigation_bar .logo {
-        width: 50px;
-        height: 50px;
+        width: 10%;
+        height: 100px;
     }
 
     .navigation_bar .logo img {
         width: auto;
         height: 100px;
+        display: block;
+        margin-left: auto;
     }
 
     .navigation_bar .menu_bar {
-        width: 40%;
+        width: 30%;
         display: flex;
-        justify-content: space-between;
+        justify-content: space-around;
         align-items: center;
         height: 100px;
+        margin-left: auto;
     }
 
     .navigation_bar .menu_bar a {
         color: white;
         text-decoration: none;
+        font-size: 16px;
+    }
+    
+    .navigation_bar .search_bar {
+        min-width: 150px;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        color: white;
+        margin-left: auto;
+    }
+
+    .navigation_bar .search_bar svg {
+        width: 30px;
+        height: 30px;
     }
 </style>
