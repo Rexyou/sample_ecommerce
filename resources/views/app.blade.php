@@ -17,6 +17,11 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/egjs-flicking/4.11.2/flicking.css" integrity="sha512-rysMP9d5q6qpqIgVFlzKteQD1hj1h2+tlMvmTazmxVs/wCOjeRCA1JATqSoZoj1i74pTm2BvRYJ7j78aYBhUBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/egjs-flicking/4.11.2/flicking-inline.css" />
         <link rel="stylesheet" href="https://naver.github.io/egjs-flicking-plugins/release/latest/dist/flicking-plugins.css">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300&family=Raleway:wght@500&display=swap" rel="stylesheet">
+
         @vite('resources/css/app.css')
     </head>
     <body>

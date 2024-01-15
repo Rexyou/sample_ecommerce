@@ -1,10 +1,13 @@
 import { defineStore } from 'pinia'
 import axiosInstance from '../settings/axios'
 
-export const useCommonStore = defineStore('auth', {
+export const useCommonStore = defineStore('common', {
   state: ()=> ({
     homepage_carousel: [],
   }),
+  getters: {
+    homepage_carousel_data: (state)=> state.homepage_carousel
+  },
   persist: {
       storage: sessionStorage,
   },
@@ -13,6 +16,7 @@ export const useCommonStore = defineStore('auth', {
       try {
         await axiosInstance.get('/page_setting?page_name=home&component=carousel')
         .then(async (response)=> {
+            console.log("pinia")
             console.log(response.data.data)
             this.homepage_carousel = response.data.data.data
         })

@@ -1,22 +1,39 @@
-!<template>
+<template>
     <div>
-        <Slider :carousel-list="carouselList" />
+        <Slider :carousel-list="homepage_carousel" />
+        <div><h1>sample</h1></div>
+        <div><h1>sample</h1></div>
+        <div><h1>sample</h1></div>
+        <div><h1>sample</h1></div>
+        <div><h1>sample</h1></div>
+        <div><h1>sample</h1></div>
+        <div><h1>sample</h1></div>
+        <div><h1>sample</h1></div>
+        <div><h1>sample</h1></div>
+        <div><h1>sample</h1></div>
+        <div><h1>sample</h1></div>
+        <div><h1>sample</h1></div>
+        <div><h1>sample</h1></div>
+        <div><h1>sample</h1></div>
+        <div><h1>sample</h1></div>
+        <div><h1>sample</h1></div>
+        <div><h1>sample</h1></div>
+        <div><h1>sample</h1></div>
+        <div><h1>sample</h1></div>
+        <div><h1>sample</h1></div>
+        <div><h1>sample</h1></div>
     </div>
 </template>
 
 <script setup>
-    import { onMounted } from 'vue'
+    import { onMounted, ref, computed, watch } from 'vue'
+    import { storeToRefs } from 'pinia'
     import { useCommonStore } from '../store/general'
     import Slider from '../components/Slider.vue'
 
     const commonStore = useCommonStore();
-
-    onMounted(async () => {
-        await commonStore.homepageCarousel();
-    })
-
-    const carouselList = commonStore.homepage_carousel;
-
+    commonStore.homepageCarousel();
+    const { homepage_carousel } = storeToRefs(commonStore)
 </script>
 
 <style lang="scss" scoped>

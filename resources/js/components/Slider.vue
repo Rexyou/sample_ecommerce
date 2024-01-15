@@ -80,15 +80,16 @@
     .description p {
         font-size: 18px;
         margin-top: 10px;
+        line-height: 25px;
     }
 
     .description .information_button {
-        background: red;
+        background: #e80202;
         border: none;
         padding: 10px 20px;
         border-radius: 5px;
         font-size: 15px;
-        width: 150px;
+        width: fit-content;
         margin-top: 20px;
     }
 </style>
