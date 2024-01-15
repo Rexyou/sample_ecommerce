@@ -17,23 +17,27 @@
 
 <script setup>
 
-    import { AutoPlay } from '@egjs/flicking-plugins'
+    import { AutoPlay, Pagination } from '@egjs/flicking-plugins'
     import "@egjs/flicking-plugins/dist/flicking-plugins.css";
+    import "@egjs/flicking-plugins/dist/pagination.css";
 
-    const plugins = [];
+    const plugins = [
+        new AutoPlay({ duration: 6000, direction: "NEXT" }),
+        new Pagination({ type: 'bullet' })
+    ];
 
     const currentList= defineProps({
         carouselList: Object
     })
 </script>
 
-<style scoped>
+<style>
 
     .carousel {
-        height: 700px;
         position: relative;
     }
-    .panel {
+
+    .carousel .panel {
         width: 100%;
         height: 100vh;
         background-attachment: fixed;
@@ -43,7 +47,7 @@
         position: relative;
     }
 
-    .panel:after {
+    .carousel .panel:after {
         content: '';
         position: absolute;
         top: 0;
@@ -53,7 +57,7 @@
         background: linear-gradient(110deg, rgba(0,0,0,0.2) 25%, rgba(0,0,0,0.4) 35%, rgba(0,0,0,0.8) 55%, rgba(0,0,0,1) 75%);
     }
 
-    .description {
+    .carousel .panel .description {
         width: 500px;
         height: 100%;
         position: absolute;
@@ -68,22 +72,22 @@
         text-align: left;
     }
 
-    .description h1,
-    .description p {
+    .carousel .panel .description h1,
+    .carousel .panel .description p {
         width: 100%;
     }
 
-    .description h1 {
+    .carousel .panel .description h1 {
         font-size: 35px;
     }
 
-    .description p {
+    .carousel .panel .description p {
         font-size: 18px;
         margin-top: 10px;
         line-height: 25px;
     }
 
-    .description .information_button {
+    .carousel .panel .description .information_button {
         background: #e80202;
         border: none;
         padding: 10px 20px;
@@ -91,5 +95,15 @@
         font-size: 15px;
         width: fit-content;
         margin-top: 20px;
+    }
+
+    .carousel .flicking-pagination-bullet {
+        /* background: white !important; */
+        border: 1px solid white;
+    }
+
+    .carousel .flicking-pagination-bullet-active {
+        background: #e80202 !important;
+        border: none !important;
     }
 </style>

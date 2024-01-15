@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Slider :carousel-list="homepage_carousel" />
+        <Slider :carousel-list="homepage_carousel" type="homepage_carousel" />
         <div><h1>sample</h1></div>
         <div><h1>sample</h1></div>
         <div><h1>sample</h1></div>
@@ -26,7 +26,6 @@
 </template>
 
 <script setup>
-    import { onMounted, ref, computed, watch } from 'vue'
     import { storeToRefs } from 'pinia'
     import { useCommonStore } from '../store/general'
     import Slider from '../components/Slider.vue'
