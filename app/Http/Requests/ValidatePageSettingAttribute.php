@@ -27,7 +27,7 @@ class ValidatePageSettingAttribute extends FormRequest
             'image_url'=> 'required|between:1,355|url',
             'redirect_url'=> 'sometimes|between:1,355|url',
             'title'=> 'required|string|between:1,100',
-            'description'=> 'required|string|between:1,255',
+            'description'=> 'sometimes|nullable|string|between:1,255',
             'display_order'=> 'required|integer',
         ];
     }

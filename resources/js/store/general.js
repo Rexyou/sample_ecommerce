@@ -4,6 +4,8 @@ import axiosInstance from '../settings/axios'
 export const useCommonStore = defineStore('common', {
   state: ()=> ({
     homepage_carousel: [],
+    brand_list_page_cover: null,
+    brand_list: [],
   }),
   getters: {
     homepage_carousel_data: (state)=> state.homepage_carousel
@@ -12,13 +14,18 @@ export const useCommonStore = defineStore('common', {
       storage: sessionStorage,
   },
   actions: {
-    async homepageCarousel() {
+    async getComponent(page_name, component) {
       try {
-        await axiosInstance.get('/page_setting?page_name=home&component=carousel')
+        await axiosInstance.get(`/page_setting?page_name=${page_name}&component=${component}`)
         .then(async (response)=> {
-            console.log("pinia")
-            console.log(response.data.data)
-            this.homepage_carousel = response.data.data.data
+            
+            if(page_name === "home" && component === "carousel"){
+              this.homepage_carousel = response.data.data.data
+            }
+            else if(page_name === "brand_list" && component === "cover_page"){
+              this.brand_list_page_cover = response.data.data
+            }
+
         })
         .catch((error)=> {
             console.log('axios error:')
@@ -30,5 +37,21 @@ export const useCommonStore = defineStore('common', {
         console.log(error)
       }
     },
+    async getBrandsList(){
+      try {
+
+        await axiosInstance.get('/brands')
+        .then((response)=> {
+          this.brand_list = response.data.data
+        }).catch((error)=> {
+          console.log('axios error:')
+          console.log(error)
+        })
+        
+      } catch (error) {
+        console.log("try catch:")
+        console.log(error)
+      }
+    }
   }
 })

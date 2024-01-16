@@ -16,4 +16,10 @@ class GeneralController extends Controller
         $result = $this->generalService->getComponentList($request);
         return finalResponse($result);
     }
+
+    public function getBrandsList(Request $request)
+    {
+        $result = $this->generalService->getBrandsList($request);
+        return finalResponse($result);
+    }
 }

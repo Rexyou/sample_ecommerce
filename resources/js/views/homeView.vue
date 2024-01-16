@@ -31,7 +31,7 @@
     import Slider from '../components/Slider.vue'
 
     const commonStore = useCommonStore();
-    commonStore.homepageCarousel();
+    commonStore.getComponent('home', 'carousel');
     const { homepage_carousel } = storeToRefs(commonStore)
 </script>
 

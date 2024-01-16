@@ -1,13 +1,15 @@
 <?php
 namespace App\Services;
 
+use App\Models\Brand;
 use App\Models\PageSetting;
 use Illuminate\Support\Facades\Validator;
 
 class GeneralService{
 
-    public function __construct(PageSetting $pageSetting){
+    public function __construct(PageSetting $pageSetting, Brand $brand){
         $this->pageSetting = $pageSetting;
+        $this->brand = $brand;
     }
 
     public function getComponentList($request)
@@ -27,6 +29,11 @@ class GeneralService{
         $filter_list = $validated->validated();
 
         return $this->pageSetting->getComponentList($filter_list);
+    }
+
+    public function getBrandsList($request)
+    {
+        return $this->brand->getBrandsList($request);
     }
 
 }

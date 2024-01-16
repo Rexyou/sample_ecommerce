@@ -14,6 +14,7 @@ class PageSetting extends Model
     protected $guarded = [];
 
     const STATUS_ACTIVE = 1;
+    const STATUS_INACTIVE = 2;
 
     public function createComponent($request){
 
@@ -86,8 +87,16 @@ class PageSetting extends Model
         if(isset($request['order'])){
             $order = $request['order'];
         }
+
+        $component = $component->where([ 'status'=> $this::STATUS_ACTIVE ]);
+
+        if(preg_match('(home)',$request['page_name'])){
+            $component = $component->orderBy('display_order', $order)->paginate(10);
+        }
+        else {
+            $component = $component->first();
+        }
         
-        $component = $component->where([ 'status'=> $this::STATUS_ACTIVE ])->orderBy('display_order', $order)->paginate(10);
 
         return successResponse($component);
     }

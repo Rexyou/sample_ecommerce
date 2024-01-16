@@ -5,7 +5,8 @@
         </div>
         <div class="menu_bar">
             <router-link :to="{ name: 'home' }">Home</router-link>
-            <router-link :to="{ name: 'product_list' }">Product List</router-link>
+            <router-link :to="{ name: 'product_list' }">Products</router-link>
+            <router-link :to="{ name: 'brand_list' }">Brands</router-link>
             <router-link :to="{ name: 'about' }">About</router-link>
         </div>
         <div class="search_bar">
