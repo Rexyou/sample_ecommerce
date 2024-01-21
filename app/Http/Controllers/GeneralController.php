@@ -22,4 +22,10 @@ class GeneralController extends Controller
         $result = $this->generalService->getBrandsList($request);
         return finalResponse($result);
     }
+
+    public function getBrand(Request $request)
+    {
+        $result = $this->generalService->getBrand($request);
+        return finalResponse($result);
+    }
 }

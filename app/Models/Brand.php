@@ -77,4 +77,14 @@ class Brand extends Model
 
         return successResponse($new_data);
     }
+
+    public function getBrand($request){
+
+        $data = $this->where([ 'id'=> $request['id'], 'status'=> $this::STATUS_ACTIVE ])->first();
+        if(!$data){
+            return errorResponse("", "brand_not_found", Response::HTTP_NOT_FOUND);
+        }
+
+        return successResponse($data);
+    }
 }

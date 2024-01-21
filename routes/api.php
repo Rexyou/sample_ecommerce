@@ -9,6 +9,7 @@ use App\Http\Controllers\GeneralController;
 Route::prefix('v1')->group(function (){
     Route::get('/page_setting', [GeneralController::class, 'getComponentList']);
     Route::get('/brands', [GeneralController::class, 'getBrandsList']);
+    Route::get('/brands/{id}/{slug?}', [GeneralController::class, 'getBrand']);
 
     Route::prefix('admin')->group(function () {
         Route::post('create_component', [AdminController::class, 'createComponent']);

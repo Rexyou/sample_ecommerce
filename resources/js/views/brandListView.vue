@@ -1,21 +1,23 @@
 <template>
     <div>
-        <div class="cover_page_section" :style="{ backgroundImage: `url(${page_cover})` }">
+        <div class="cover_page_section" :style="{ backgroundImage: `url(${brand_list_page_cover.image_url})` }">
             <h1>Brands</h1>
         </div>
         <div class="brand_list">'
-            <div v-if="Object.keys(brands_list_data).length > 0">
-                <div v-for="(data, index) in brands_list_data" :key="index" class="listing">
+            <div v-if="Object.keys(brand_list).length > 0">
+                <div v-for="(data, index) in brand_list" :key="index" class="listing">
                     <div class="title">
                         <h1>{{ index.toUpperCase() }}</h1>
                     </div>
                     <div class="list_data">
                         <div v-for="(brand_data, index2) in data" :key="index2" class="brand_container">
-                            <div v-if="brand_data.icon_image_url !== null" :style="{ backgroundImage: `url(${brand_data.icon_image_url})` }" class="brand_image"></div>
-                            <div v-else class="brand_image_2" :style="{ background: randomColor() }">
-                                <h1>{{ getFirstLetter(brand_data.name) }}</h1>    
-                            </div>
-                            <span class="brand_title">{{ brand_data.name }}</span>
+                            <router-link :to="{ name: 'brand', params: { brand_id: brand_data.id } }">
+                                <div v-if="brand_data.icon_image_url !== null" :style="{ backgroundImage: `url(${brand_data.icon_image_url})` }" class="brand_image"></div>
+                                <div v-else class="brand_image_2" :style="{ background: randomColor() }">
+                                    <h1>{{ getFirstLetter(brand_data.name) }}</h1>    
+                                </div>
+                                <span class="brand_title">{{ brand_data.name }}</span>
+                            </router-link>
                         </div>
                     </div>
                 </div>
@@ -26,25 +28,16 @@
 </template>
 
 <script setup>
+    import { watch, onMounted, computed, ref } from 'vue'
     import { storeToRefs } from 'pinia'
     import { useCommonStore } from "../store/general";
 
     const commonStore = useCommonStore()
-    commonStore.getComponent('brand_list', 'cover_page');
-    commonStore.getBrandsList()
+    onMounted(async()=> {
+        commonStore.getComponent('brand_list', 'cover_page');
+        commonStore.getBrandsList()
+    })
     const { brand_list_page_cover, brand_list } = storeToRefs(commonStore)
-
-    let page_cover = "";
-    if(brand_list_page_cover !== null){
-        page_cover = brand_list_page_cover.value.image_url;
-    }
-
-    let brands_list_data = [];
-    if(Object.keys(brand_list.value).length != 0){
-        brands_list_data = brand_list.value
-    }
-
-    console.log(brands_list_data)
 
     const getFirstLetter = (data) => {
         const array_list = data.split("")
