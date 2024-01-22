@@ -24,6 +24,11 @@ class Brand extends Model
         );
     }
 
+    public function product()
+    {
+        return $this->hasMany(Product::class);
+    }
+
     public function createBrand($request){
 
         $checker = $this->checkNameExists($request);
