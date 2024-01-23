@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('name', 255);
             $table->string('code_name', 255);
-            $table->string('icon_image_url', 255);
-            $table->string('banner_image_url', 255);
+            $table->string('icon_image_url', 255)->nullable();
+            $table->string('banner_image_url', 255)->nullable();
             $table->unsignedBigInteger('brand_id');
             $table->integer('type')->default(1);
             $table->json('sizing');
@@ -49,6 +49,8 @@ return new class extends Migration
      */
     public function down(): void
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         Schema::dropIfExists('products');
+        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }
 };

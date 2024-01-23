@@ -6,6 +6,7 @@ use App\Models\PageSetting;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\ValidateBrandAttribute;
 use Symfony\Component\HttpFoundation\Response;
+use App\Http\Requests\ValidateProductAttribute;
 use App\Http\Requests\ValidatePageSettingUpdate;
 use App\Http\Requests\ValidatePageSettingAttribute;
 
@@ -23,7 +24,7 @@ class AdminService{
         $validated = Validator::make($request->all(), $validation->rules());
 
         if($validated->fails()){
-            return errorResponse("", $validated->messages(), 422);
+            return errorResponse("", $validated->messages(), Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $filter_list = $validated->validated();
@@ -41,7 +42,7 @@ class AdminService{
         $validated = Validator::make($request->all(), $validation->rules());
 
         if($validated->fails()){
-            return errorResponse("", $validated->messages(), 422);
+            return errorResponse("", $validated->messages(), Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $filter_list = $validated->validated();
@@ -56,7 +57,7 @@ class AdminService{
         $validated = Validator::make($request->all(), $validation->rules());
 
         if($validated->fails()){
-            return errorResponse("", $validated->messages(), 422);
+            return errorResponse("", $validated->messages(), Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $filter_list = $validated->validated();
@@ -74,6 +75,24 @@ class AdminService{
         }
 
         return $this->brand->createBrand($filter_list);
+    }
+
+    public function createProduct($request)
+    {
+
+        $exists = $this->brand->getBrand([ 'id'=> $request['brand_id'] ]);
+        if(!$exists['status']){
+            return $exists;
+        }
+
+        $validation = new ValidateProductAttribute;
+        $validated = Validator::make($request->all(), $validation->rules());
+
+        if($validated->fails()){
+            return errorResponse("", $validated->messages(), Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        return $this->product->createProduct($request);
     }
 
 }

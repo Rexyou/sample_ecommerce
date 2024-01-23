@@ -35,4 +35,10 @@ class AdminController extends Controller
         $result = $this->adminService->createBrand($request);
         return finalResponse($result);
     }
+
+    public function createProduct(Request $request)
+    {
+        $result = $this->adminService->createProduct($request);
+        return finalResponse($result);
+    }
 }

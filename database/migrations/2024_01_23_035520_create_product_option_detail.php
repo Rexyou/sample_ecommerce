@@ -11,23 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('product_options', function (Blueprint $table) {
+        Schema::create('product_option_details', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('product_id');
-            $table->string('category', 255);
-            $table->string('name', 255);
-            $table->unsignedBigInteger('created_by');
+            $table->json('options');
+            $table->integer('quantity')->default(0);
             $table->integer('status')->default(1);
             $table->timestamps();
 
             $table->foreign('product_id')->references('id')->on('products');
-            $table->foreign('created_by')->references('id')->on('users');
 
-            $table->unique(['product_id', 'category', 'name']);
             $table->index('product_id');
-            $table->index('category');
-            $table->index('name');
-            $table->index('created_by');
+            $table->index('options');
+            $table->index('quantity');
             $table->index('status');
             $table->index(['created_at', 'updated_at']);
         });
@@ -38,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('product_options');
+        Schema::dropIfExists('product_option_details');
     }
 };

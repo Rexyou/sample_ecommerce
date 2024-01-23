@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('description', 355)->nullable();
             $table->year('founded_year');
             $table->json('social_platform');
-            $table->unsignedInteger('main_brand')->default(0);
+            $table->integer('main_brand')->default(0);
             $table->integer('status')->default(1);
             $table->timestamps();
 
@@ -37,6 +37,8 @@ return new class extends Migration
      */
     public function down(): void
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         Schema::dropIfExists('brands');
+        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }
 };

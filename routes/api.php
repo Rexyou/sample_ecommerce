@@ -15,5 +15,6 @@ Route::prefix('v1')->group(function (){
         Route::post('create_component', [AdminController::class, 'createComponent']);
         Route::post('update_component/{id}', [AdminController::class, 'updateComponent']);
         Route::post('create_brand', [AdminController::class, 'createBrand']);
+        Route::post('create_product', [AdminController::class, 'createProduct']);
     });
 });

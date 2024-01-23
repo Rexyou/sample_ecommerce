@@ -54,7 +54,7 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background: linear-gradient(110deg, rgba(0,0,0,0.2) 25%, rgba(0,0,0,0.4) 35%, rgba(0,0,0,0.8) 55%, rgba(0,0,0,1) 75%);
+        background: linear-gradient(110deg, rgba(0,0,0,0.2) 25%, rgba(0,0,0,0.4) 35%, rgba(0,0,0,0.8) 65%, rgba(0,0,0,1) 75%);
     }
 
     .carousel .panel .description {

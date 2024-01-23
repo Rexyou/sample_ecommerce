@@ -20,4 +20,10 @@ class Product extends Model
     {
         return $this->hasOne(Brand::class);
     }
+
+    public function createProduct($request)
+    {
+        $creation = $this->create($request);
+        return successResponse($creation);
+    }
 }
