@@ -10,7 +10,7 @@
         if(!$status){
             $code = $request['code'];
 
-            if(!is_integer($code)){
+            if(!is_integer($code) || empty($code)){
                 $code=500;
             }
 

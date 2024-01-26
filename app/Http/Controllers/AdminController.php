@@ -41,4 +41,22 @@ class AdminController extends Controller
         $result = $this->adminService->createProduct($request);
         return finalResponse($result);
     }
+
+    public function createProductImages(Request $request)
+    {
+        $result = $this->adminService->createProductImages($request);
+        return finalResponse($result);
+    }
+
+    public function createProductOptions(Request $request)
+    {
+        $result = $this->adminService->createProductOptions($request);
+        return finalResponse($result);
+    }
+
+    public function createProductOptionDetails(Request $request)
+    {
+        $result = $this->adminService->createProductOptionDetails($request);
+        return finalResponse($result);
+    }
 }

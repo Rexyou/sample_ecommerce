@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('category', 255);
             $table->string('name', 255);
             $table->unsignedBigInteger('created_by');
+            $table->integer('display_order')->default(0);
             $table->integer('status')->default(1);
             $table->timestamps();
 

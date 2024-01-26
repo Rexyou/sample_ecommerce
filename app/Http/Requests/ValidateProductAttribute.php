@@ -27,11 +27,13 @@ class ValidateProductAttribute extends FormRequest
             'banner_image_url'=> 'nullable|url',
             'brand_id'=> 'required|integer',
             'type'=> 'required|integer',
-            'sizing'=> 'required|string',
-            'original_price'=> 'required|decimal:2,8',
-            'member_price'=> 'required|decimal:2,8',
-            'description'=> 'nullable|between:1,255',
+            'sizing'=> 'required|array',
+            'sizing.width'=> 'required|numeric',
+            'sizing.height'=> 'required|numeric',
+            'sizing.depth'=> 'required|numeric',
+            'description'=> 'required|between:1,255',
             'created_by'=> 'required|integer',
+            'selling_status'=> 'required|integer',
             'display_order'=> 'required|integer',
         ];
     }

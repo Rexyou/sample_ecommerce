@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('username')->unique();
             $table->string('email')->unique();
-            $table->integer('phone')->unique();
+            $table->string('phone')->unique();
             $table->string('password');
             $table->integer('type')->default(1);
             $table->integer('verified')->default(0);
@@ -40,6 +40,8 @@ return new class extends Migration
      */
     public function down(): void
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         Schema::dropIfExists('users');
+        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }
 };

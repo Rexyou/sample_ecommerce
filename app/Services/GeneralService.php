@@ -2,15 +2,17 @@
 namespace App\Services;
 
 use App\Models\Brand;
+use App\Models\Product;
 use App\Models\PageSetting;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
 
 class GeneralService{
 
-    public function __construct(PageSetting $pageSetting, Brand $brand){
+    public function __construct(PageSetting $pageSetting, Brand $brand, Product $product){
         $this->pageSetting = $pageSetting;
         $this->brand = $brand;
+        $this->product = $product;
     }
 
     public function getComponentList($request)
@@ -54,6 +56,11 @@ class GeneralService{
         $filter_list = $validated->validated();
 
         return $this->brand->getBrand($filter_list);
+    }
+
+    public function getProduct($request)
+    {
+        return $this->product->getProduct($request->id);
     }
 
 }
