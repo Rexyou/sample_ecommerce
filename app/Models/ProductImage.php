@@ -13,6 +13,8 @@ class ProductImage extends Model
     protected $guarded= [];
     protected $table= "product_images";
 
+    const STATUS_ACTIVE = 1;
+
     public function product()
     {
         return $this->belongsTo(Product::class);

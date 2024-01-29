@@ -36,7 +36,10 @@ class Product extends Model
 
     public function product_images()
     {
-        return $this->hasMany(ProductImage::class)->orderBy('display_order');
+        return $this->hasMany(ProductImage::class)
+                    ->where([ 'status'=> ProductImage::STATUS_ACTIVE ])
+                    ->select('id', 'product_id', 'image_url', 'display_order')
+                    ->orderBy('display_order');
     }
 
     public function product_options()
@@ -97,12 +100,33 @@ class Product extends Model
         return successResponse();
     }
 
+    public function filterProductOptions()
+    {
+        $product_options = ProductOption::where([ 'product_id'=> $this->id ])->get();
+        $data = [];
+        if(isset($product_options) && !empty($product_options)){
+            foreach($product_options as $option){
+                if(!isset($data[$option['category']])){
+                    $data[$option['category']] = [];
+                }
+
+                $data[$option['category']][$option['id']] = $option['name'];
+            }
+        }
+
+        $this->product_options = $data;
+
+        return $this;
+    }
+
     public function getProduct($product_id)
     {
-        $data = $this->with('product_images', 'product_options', 'product_option_details')->where([ 'id'=> $product_id ])->first();
+        $data = $this->with('product_images', 'product_option_details')->where([ 'id'=> $product_id ])->first();
         if(!$data){
             return errorResponse("", "product_not_found", Response::HTTP_NOT_FOUND); 
         }
+
+        $data = $data->filterProductOptions();
 
         return successResponse($data);
     }
