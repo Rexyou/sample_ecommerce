@@ -59,4 +59,10 @@ class AdminController extends Controller
         $result = $this->adminService->createProductOptionDetails($request);
         return finalResponse($result);
     }
+
+    public function updateProductStatus(Request $request)
+    {
+        $result = $this->adminService->updateProductStatus($request);
+        return finalResponse($result);
+    }
 }

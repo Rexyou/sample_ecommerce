@@ -92,12 +92,12 @@ class Product extends Model
 
     public function checkProductExists($request)
     {
-        $exist = $this->where([ 'id'=> $request['id'] ])->exists();
-        if(!$exist){
+        $data = $this->where([ 'id'=> $request['id'] ])->first();
+        if(!$data){
             return errorResponse("", "product_not_found", Response::HTTP_NOT_FOUND);
         }
 
-        return successResponse();
+        return successResponse($data);
     }
 
     public function filterProductOptions()

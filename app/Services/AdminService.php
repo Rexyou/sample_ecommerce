@@ -343,4 +343,68 @@ class AdminService{
         }
     }
 
+    public function updateProductStatus($request)
+    {
+
+        DB::beginTransaction();
+
+        try {
+            
+            // $user = Auth::user();
+            // $user_id = $user->id;
+            $user = User::where([ 'type'=> User::TYPE_ADMIN, 'status'=> User::STATUS_ACTIVE ])->first();
+            $user_id = $user->id;
+
+            $validation = [
+                'product_id'=> 'required|integer',
+                'status'=> "required|integer|between:".Product::STATUS_INIATE.",".Product::STATUS_INACTIVE
+            ];
+
+            $request->merge([ 'product_id'=> $request->product_id, 'status'=> $request->status ]);
+            $validated = Validator::make($request->all(), $validation);
+
+            if($validated->fails()){
+                return errorResponse("", $validated->messages(), Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
+
+            $filter_list = $validated->validated();
+
+            $status = $filter_list['status'];
+
+            // Checker
+            $product_id = $filter_list['product_id'];
+            $checker = $this->product->checkProductExists([ 'id'=> $product_id ]);
+            if(!$checker['status']){
+                return $checker;
+            }
+
+            $product = $checker['data'];
+
+            if($status == Product::STATUS_ACTIVE && ($product->product_images->count() == 0 && $product->product_option_details->count() == 0)){
+                return errorResponse('', 'missing_product_details', Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
+
+            if($status == $product->status){
+                return errorResponse('', 'status_same', Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
+
+            $update = $product->update([ 'status'=> $status ]);
+            if(!$update){
+                return errorResponse('', 'product_update_failure', Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
+
+            DB::commit();
+
+            return successResponse();
+
+        } catch (\Exception $e) {
+
+            print_r($e);
+
+            DB::rollback();
+            return errorResponse('', $e, $e->getCode());
+
+        }
+    }
+
 }
