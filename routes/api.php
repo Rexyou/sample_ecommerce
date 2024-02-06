@@ -29,5 +29,6 @@ Route::prefix('v1')->group(function (){
         Route::post('create_product_images/{product_id}', [AdminController::class, 'createProductImages']);
         Route::post('create_product_options/{product_id}', [AdminController::class, 'createProductOptions']);
         Route::post('create_product_option_details/{product_id}', [AdminController::class, 'createProductOptionDetails']);
+        Route::post('update_product/{product_id}/{status}', [AdminController::class, 'updateProductStatus']);
     });
 });
