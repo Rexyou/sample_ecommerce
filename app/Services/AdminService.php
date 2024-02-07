@@ -265,7 +265,7 @@ class AdminService{
 
         DB::beginTransaction();
 
-        // try {
+        try {
             
             // $user = Auth::user();
             // $user_id = $user->id;
@@ -336,12 +336,12 @@ class AdminService{
 
             return successResponse();
 
-        // } catch (\Exception $e) {
+        } catch (\Exception $e) {
 
-        //     DB::rollback();
-        //     return errorResponse('', $e->getMessage(), $e->getCode());
+            DB::rollback();
+            return errorResponse('', $e->getMessage(), $e->getCode());
 
-        // }
+        }
     }
 
     public function updateProductStatus($request)
