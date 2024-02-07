@@ -265,7 +265,7 @@ class AdminService{
 
         DB::beginTransaction();
 
-        try {
+        // try {
             
             // $user = Auth::user();
             // $user_id = $user->id;
@@ -292,23 +292,26 @@ class AdminService{
                 $detail['product_id'] = $request->product_id;
                 $detail['created_by'] = $user_id;
 
-                if($current_options == null && count($detail['options']) > 0){
-                    return errorResponse("", "options_invalid", Response::HTTP_UNPROCESSABLE_ENTITY);
-                }
-                else {
-
-                    foreach($detail['options'] as $key => $value)
-                    {
-                        if(!isset($current_options[$key])){
-                            return errorResponse("", "options_category_invalid", Response::HTTP_UNPROCESSABLE_ENTITY);
-                        }
-
-                        if(!isset($current_options[$key][$value])){
-                            return errorResponse("", "options_id_invalid", Response::HTTP_UNPROCESSABLE_ENTITY);
-                        }
+                if(isset($detail['options']) && !empty($detail['options'])){
+                    if($current_options == null && count($detail['options']) > 0){
+                        return errorResponse("", "options_invalid", Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
-                    
+                    else {
+    
+                        foreach($detail['options'] as $key => $value)
+                        {
+                            if(!isset($current_options[$key])){
+                                return errorResponse("", "options_category_invalid", Response::HTTP_UNPROCESSABLE_ENTITY);
+                            }
+    
+                            if(!isset($current_options[$key][$value])){
+                                return errorResponse("", "options_id_invalid", Response::HTTP_UNPROCESSABLE_ENTITY);
+                            }
+                        }
+                        
+                    }
                 }
+
             }
 
             $validation = new ValidateProductOptionDetailAttribute;
@@ -333,14 +336,12 @@ class AdminService{
 
             return successResponse();
 
-        } catch (\Exception $e) {
+        // } catch (\Exception $e) {
 
-            print_r($e);
+        //     DB::rollback();
+        //     return errorResponse('', $e->getMessage(), $e->getCode());
 
-            DB::rollback();
-            return errorResponse('', $e, $e->getCode());
-
-        }
+        // }
     }
 
     public function updateProductStatus($request)

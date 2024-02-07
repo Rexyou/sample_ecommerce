@@ -3,14 +3,19 @@
         <div class="cover_page_section" :style="{ backgroundImage: `url(${brand_details.banner_image_url})` }">
             <h1>{{ brand_details.name }}</h1>
         </div>
+        <div class="product_list_view">
+            <Filter />
+            <List />
+        </div>
     </div>
 </template>
 
 <script setup>
-    import { onBeforeMount } from 'vue'
     import { useRoute } from 'vue-router'
     import { useCommonStore } from '../store/general';
     import { storeToRefs } from 'pinia'
+    import Filter from '../components/Filter.vue';
+    import List from '../components/List.vue'
 
     const route = useRoute()
     const brand_id = route.params.brand_id;
@@ -48,5 +53,10 @@
         font-size: 90px;
         position: absolute;
         z-index: 1;
+    }
+
+    .product_list_view {
+        display: flex;
+        flex-direction: row;
     }
 </style>

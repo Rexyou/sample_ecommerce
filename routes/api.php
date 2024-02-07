@@ -11,6 +11,7 @@ Route::prefix('v1')->group(function (){
     Route::get('/page_setting', [GeneralController::class, 'getComponentList']);
     Route::get('/brands', [GeneralController::class, 'getBrandsList']);
     Route::get('/brands/{id}/{slug?}', [GeneralController::class, 'getBrand']);
+    Route::get('/brand/{id}/products', [GeneralController::class, 'getBrandProducts']);
     Route::get('/product/{id}/{slug?}', [GeneralController::class, 'getProduct']);
 
     Route::prefix('user')->group(function () {

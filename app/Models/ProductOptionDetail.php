@@ -21,7 +21,7 @@ class ProductOptionDetail extends Model
     {
         return new Attribute(
             get: fn ($value) => json_decode($value),
-            set: fn ($value) => json_encode($value),
+            set: fn ($value) => !empty($value) ? json_encode($value) : NULL,
         );
     }
 
@@ -69,8 +69,10 @@ class ProductOptionDetail extends Model
         $data = false;
         $exist = $this->where([ 'product_id'=> $request['product_id'] ]);
 
-        foreach($request['options'] as $category => $id){
-            $exist = $exist->whereJsonContains("options->$category", $id);
+        if(isset($request['options']) && !empty($request['options'])){
+            foreach($request['options'] as $category => $id){
+                $exist = $exist->whereJsonContains("options->$category", $id);
+            }
         }
 
         $exist = $exist->exists();

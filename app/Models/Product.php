@@ -29,15 +29,21 @@ class Product extends Model
     const STATUS_ACTIVE=1;
     const STATUS_INACTIVE=2;
 
+    const PAGINATE=15;
+
     public function brand()
     {
-        return $this->hasOne(Brand::class);
+        return $this->hasOne(Brand::class, 'id', 'brand_id');
     }
 
     public function product_images()
     {
-        return $this->hasMany(ProductImage::class)
-                    ->where([ 'status'=> ProductImage::STATUS_ACTIVE ])
+        return $this->hasMany(ProductImage::class);
+    }
+
+    public function product_images_filter()
+    {
+        return $this->product_images()->where([ 'status'=> ProductImage::STATUS_ACTIVE ])
                     ->select('id', 'product_id', 'image_url', 'display_order')
                     ->orderBy('display_order');
     }
@@ -102,6 +108,7 @@ class Product extends Model
 
     public function filterProductOptions()
     {
+        // Avoid call relationships data
         $product_options = ProductOption::where([ 'product_id'=> $this->id ])->get();
         $data = [];
         if(isset($product_options) && !empty($product_options)){
@@ -127,6 +134,73 @@ class Product extends Model
         }
 
         $data = $data->filterProductOptions();
+
+        return successResponse($data);
+    }
+
+    public function getProductPrice()
+    {
+        $product_option_details = $this->product_option_details()->orderByDesc('original_price')->get([ 'original_price', 'member_price', 'sale_price', 'sale_member_price' ])->toArray();
+        $this->price_min = end($product_option_details);
+        $this->price_max = reset($product_option_details);
+
+        return $this;
+    }
+
+    public function getProductList($request)
+    {
+        $data = $this->with(['brand'=> function($query){
+            $query->select('id','name');
+        }, 'product_images_filter'])->where([ 'brand_id'=> $request['id'], 'status'=> $this::STATUS_ACTIVE ]);
+
+        if(isset($request['type']) && count($request['type']) > 0){
+            $data = $data->whereIn('type', $request['type']);
+        }
+
+        if(isset($request['selling_status']) && count($request['selling_status']) > 0){
+            $data = $data->whereIn('selling_status', $request['selling_status']);
+        }
+
+        if(isset($request['price_min']) && !empty($request['price_min'])){
+            $data = $data->whereHas('product_option_details', function($query)use($request){
+                $query->whereRaw("original_price >= ".$request['price_min']);
+            });
+        }
+
+        if(isset($request['price_max']) && !empty($request['price_max']) > 0){
+            $data = $data->whereHas('product_option_details', function($query)use($request){
+                $query->whereRaw("original_price <= ".$request['price_max']);
+            });
+        }
+
+        if(isset($request['sorting']) && !empty($request['sorting'])){
+            switch ($request['sorting']) {
+                case 'created_asc':
+                    $data = $data->order("created_at");
+                    break;
+
+                case 'created_desc':
+                    $data = $data->orderByDesc("created_at");
+                    break;
+                
+                default:
+                    $data = $data->orderByDesc("display_order");
+                    break;
+            }
+        }
+        else {
+            $data = $data->orderByDesc("display_order");
+        }
+
+        $paginate = $this::PAGINATE;
+        if(isset($request['paginate']) && !empty($request['paginate'])){
+            $paginate = $request['paginate'];
+        }
+        $data = $data->paginate($paginate);
+
+        foreach($data->items() as $item){
+            $item = $item->getProductPrice();
+        }
 
         return successResponse($data);
     }

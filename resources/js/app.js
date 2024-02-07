@@ -19,8 +19,7 @@ pinia.use(piniaPluginPersistedstate)
 app.use(pinia)
 app.use(router)
 
-
 // Gloabal Component
-app.component("Flicking", Flicking);
+app.component("Flicking", Flicking);    
 app.component("v-icon", OhVueIcon);
 app.mount("#app")
