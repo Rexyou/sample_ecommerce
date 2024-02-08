@@ -34,3 +34,9 @@
 
         return $new_array;
     }
+
+    function errorMessageHandler($e)
+    {
+        $message = $e->getMessage()." at line ".$e->getLine()." in ".$e->getFile();
+        return errorResponse('', $message, $e->getCode());
+    }

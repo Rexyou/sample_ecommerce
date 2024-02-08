@@ -127,7 +127,7 @@ class AdminService{
         } catch (\Exception $e) {
 
             DB::rollback();
-            return errorResponse('', $e->getMessage(), $e->getCode());
+            return errorMessageHandler($e);
 
         }
         
@@ -183,7 +183,7 @@ class AdminService{
         } catch (\Exception $e) {
 
             DB::rollback();
-            return errorResponse('', $e->getMessage(), $e->getCode());
+            return errorMessageHandler($e);
 
         }
         
@@ -254,7 +254,7 @@ class AdminService{
         } catch (\Exception $e) {
 
             DB::rollback();
-            return errorResponse('', $e->getMessage(), $e->getCode());
+            return errorMessageHandler($e);
 
         }
 
@@ -339,7 +339,7 @@ class AdminService{
         } catch (\Exception $e) {
 
             DB::rollback();
-            return errorResponse('', $e->getMessage(), $e->getCode());
+            return errorMessageHandler($e);
 
         }
     }
@@ -400,10 +400,8 @@ class AdminService{
 
         } catch (\Exception $e) {
 
-            print_r($e);
-
             DB::rollback();
-            return errorResponse('', $e, $e->getCode());
+            return errorMessageHandler($e);
 
         }
     }
