@@ -21,14 +21,14 @@ Route::prefix('v1')->group(function (){
             Route::post('login', [UserController::class, 'login']);
         });
 
-        Route::middleware(['auth:api'])->group(function () {
+        Route::middleware(['auth:api', 'user_checker'])->group(function () {
             Route::post('logout', [UserController::class, 'logout']);
         });
 
 
     });
 
-    Route::prefix('admin')->group(function () {
+    Route::prefix('admin')->middleware([ 'auth:api', 'admin_checker' ])->group(function () {
         Route::post('create_component', [AdminController::class, 'createComponent']);
         Route::post('update_component/{id}', [AdminController::class, 'updateComponent']);
         Route::post('create_brand', [AdminController::class, 'createBrand']);
