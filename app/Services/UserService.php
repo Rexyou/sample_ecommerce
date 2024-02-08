@@ -2,6 +2,8 @@
 namespace App\Services;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\ValidateUserLogin;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\ValidateUserAttribute;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,15 +17,35 @@ class UserService{
     public function register($request)
     {
         $validation = new ValidateUserAttribute;
-        $validated = Validator::make($request->all(), $validation->rules());
+        $validator = Validator::make($request->all(), $validation->rules());
 
-        if($validated->fails()){
-            return errorResponse("", $validated->messages(), Response::HTTP_UNPROCESSABLE_ENTITY);
+        if($validator->fails()){
+            return errorResponse("", $validator->messages(), Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        $filter_list = $validated->validated();
+        $filter_list = $validator->validated();
 
         return $this->user->register($filter_list);
+    }
+
+    public function login($request)
+    {
+        $validation = new ValidateUserLogin;
+        $validator = Validator::make($request->all(), $validation->rules());
+
+        if($validator->fails()){
+            return errorResponse("", $validator->messages(), Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        $filter_list = $validator->validated();
+
+        return $this->user->login($filter_list);
+    }
+
+    public function logout($request)
+    {
+        Auth::logout();
+        return successResponse();
     }
 
 }

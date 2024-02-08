@@ -18,4 +18,16 @@ class UserController extends Controller
         $result = $this->userService->register($request);
         return finalResponse($result);
     }
+
+    public function login(Request $request)
+    {
+        $result = $this->userService->login($request);
+        return finalResponse($result);
+    }
+
+    public function logout(Request $request)
+    {
+        $result = $this->userService->logout($request);
+        return finalResponse($result);
+    }
 }
