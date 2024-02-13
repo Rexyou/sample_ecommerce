@@ -34,7 +34,10 @@ const router = createRouter({
       name: 'about',
       component: aboutView
     },
-  ]
+  ],
+  scrollBehavior() {
+    return { top: 0, left: 0 }
+  }
 })
 
 router.beforeEach(async (to, from)=> {

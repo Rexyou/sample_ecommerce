@@ -6,7 +6,9 @@ export const useCommonStore = defineStore('common', {
     homepage_carousel: [],
     brand_list_page_cover: [],
     brand_list: [],
-    brand_details: null,
+    brand_details: [],
+    brand_product_list: [],
+    brand_product_list_pagination: [],
   }),
   actions: {
     async getComponent(page_name, component) {
@@ -59,6 +61,25 @@ export const useCommonStore = defineStore('common', {
           console.log("response")
           console.log(response.data)
           this.brand_details = response.data.data
+        })
+        .catch((error)=> {
+          console.log('axios error:')
+          console.log(error)
+        })
+
+      } catch (error) {
+        console.log("try catch:")
+        console.log(error)
+      }
+    },
+    async getBrandProducts(id, params)
+    {
+      try {
+        await axiosInstance.get(`/brand/${id}/products?${params}`)
+        .then((response)=> {
+          console.log("getBrandProduct")
+          this.brand_product_list = response.data.data.data;
+          this.brand_product_list_pagination = response.data.data;
         })
         .catch((error)=> {
           console.log('axios error:')

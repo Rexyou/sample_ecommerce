@@ -17,6 +17,7 @@
         "oh-vue-icons": "^1.0.0-rc3",
         "pinia": "^2.1.7",
         "pinia-plugin-persistedstate": "^3.2.1",
+        "vue-awesome-paginate": "^1.1.46",
         "vue-router": "^4.2.5"
     }
 }

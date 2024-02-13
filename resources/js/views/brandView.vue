@@ -4,13 +4,14 @@
             <h1>{{ brand_details.name }}</h1>
         </div>
         <div class="product_list_view">
-            <Filter />
+            <Filter :brand_id="brand_id" />
             <List />
         </div>
     </div>
 </template>
 
 <script setup>
+    import { onMounted } from 'vue'
     import { useRoute } from 'vue-router'
     import { useCommonStore } from '../store/general';
     import { storeToRefs } from 'pinia'
@@ -20,7 +21,9 @@
     const route = useRoute()
     const brand_id = route.params.brand_id;
     const commonStore = useCommonStore()
-    commonStore.getBrand(brand_id)
+    // onMounted(async () => {
+        commonStore.getBrand(brand_id)  
+    // }, [ brand_id ])
     const { brand_details } = storeToRefs(commonStore)
 </script>
 

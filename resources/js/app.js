@@ -9,6 +9,8 @@ import "@egjs/vue3-flicking/dist/flicking-inline.css";
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 import { OhVueIcon, addIcons } from "oh-vue-icons";
 import { BiSearch, BiPeopleFill, BiCart } from "oh-vue-icons/icons";
+import VueAwesomePaginate from "vue-awesome-paginate";
+import "vue-awesome-paginate/dist/style.css";
 
 addIcons(BiSearch, BiPeopleFill, BiCart);
 
@@ -18,6 +20,7 @@ const pinia = createPinia()
 pinia.use(piniaPluginPersistedstate)
 app.use(pinia)
 app.use(router)
+app.use(VueAwesomePaginate)
 
 // Gloabal Component
 app.component("Flicking", Flicking);    

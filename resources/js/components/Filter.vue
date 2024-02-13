@@ -74,7 +74,16 @@
 </template>
 
 <script setup>
-    import { onMounted } from 'vue'
+    import { onMounted, reactive } from 'vue'
+    import { useCommonStore } from '../store/general';
+
+    const props = defineProps({ brand_id: String });
+    const brand_id = props.brand_id;
+    const commonStore = useCommonStore();
+    const params = reactive({
+        
+    })
+    commonStore.getBrandProducts(brand_id, params)
 
     function controlFromInput(fromSlider, fromInput, toInput, controlSlider) {
         const [from, to] = getParsed(fromInput, toInput);
@@ -320,5 +329,12 @@
         border: none;
         color: white;
         background: #e80202;
+        transition: all .3s ease-in-out;
+        opacity: 0.5;
+    }
+
+    .search_button:hover {
+        opacity: 1;
+        cursor: pointer;
     }
 </style>
