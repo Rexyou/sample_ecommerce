@@ -2,30 +2,30 @@
     <div class="filter_list">
         <h2 class="filter_list_title">Filter List</h2>
         <div class="search_bar">
-            <input type="text" placeholder="Search..." />
+            <input type="text" placeholder="Search..." v-model="form.search_input" />
             <v-icon name="bi-search" class="search_icon" />
         </div>
         <div class="type_bar">
             <h3>Type</h3>
             <div class="selection">
                 <div class="options">
-                    <input type="checkbox" name="type" id="type_1" value="1">
+                    <input type="checkbox" name="type" id="type_1" value="1" v-model="form.type">
                     <label for="type_1">New</label>
                 </div>
                 <div class="options">
-                    <input type="checkbox" name="type" id="type_2" value="2">
+                    <input type="checkbox" name="type" id="type_2" value="2" v-model="form.type">
                     <label for="type_2">Preorder</label>
                 </div>
                 <div class="options">
-                    <input type="checkbox" name="type" id="type_3" value="3">
+                    <input type="checkbox" name="type" id="type_3" value="3" v-model="form.type">
                     <label for="type_3">Second Hand</label>
                 </div>
                 <div class="options">
-                    <input type="checkbox" name="type" id="type_4" value="4">
+                    <input type="checkbox" name="type" id="type_4" value="4" v-model="form.type">
                     <label for="type_4">Flaw</label>
                 </div>
                 <div class="options">
-                    <input type="checkbox" name="type" id="type_5" value="5">
+                    <input type="checkbox" name="type" id="type_5" value="5" v-model="form.type">
                     <label for="type_5">Sale</label>
                 </div>
             </div>
@@ -34,19 +34,19 @@
             <h3>Stock Status</h3>
             <div class="selection">
                 <div class="options">
-                    <input type="checkbox" name="selling_status" id="selling_status_0" value="0">
+                    <input type="checkbox" name="selling_status" id="selling_status_0" value="0" v-model="form.selling_status">
                     <label for="selling_status_0">Preorder</label>
                 </div>
                 <div class="options">
-                    <input type="checkbox" name="selling_status" id="selling_status_1" value="1">
+                    <input type="checkbox" name="selling_status" id="selling_status_1" value="1" v-model="form.selling_status">
                     <label for="selling_status_1">In Stock</label>
                 </div>
                 <div class="options">
-                    <input type="checkbox" name="selling_status" id="selling_status_2" value="2">
+                    <input type="checkbox" name="selling_status" id="selling_status_2" value="2" v-model="form.selling_status">
                     <label for="selling_status_2">Low Stock</label>
                 </div>
                 <div class="options">
-                    <input type="checkbox" name="selling_status" id="selling_status_3" value="3">
+                    <input type="checkbox" name="selling_status" id="selling_status_3" value="3" v-model="form.selling_status">
                     <label for="selling_status_3">Out Of Stock</label>
                 </div>
             </div>
@@ -55,11 +55,11 @@
             <h3>Price</h3>
             <div class="price_range">
                 <label for="min_price">Min: </label>
-                <input class="form_control_container__time__input" type="number" id="fromInput" value="100" min="0" max="10000"/>
+                <input class="form_control_container__time__input" type="number" id="fromInput" value="100" min="0" max="10000" v-model="form.price_min"/>
             </div>
             <div class="price_range">
                 <label for="max_price">Max: </label>
-                <input class="form_control_container__time__input" type="number" id="toInput" value="3000" min="0" max="10000"/>
+                <input class="form_control_container__time__input" type="number" id="toInput" value="3000" min="0" max="10000" v-model="form.price_max"/>
             </div>
             <!-- Slider -->
             <div class="sliders_control">
@@ -68,7 +68,7 @@
             </div>
         </div>
         <div class="search_button_bar">
-            <button class="search_button">Search</button>
+            <button class="search_button" @click.prevent="filterData">Search</button>
         </div>
     </div>
 </template>
@@ -113,9 +113,11 @@
     fillSlider(fromSlider, toSlider, '#C6C6C6', '#e80202', toSlider);
     if (from > to) {
         fromSlider.value = to;
-        fromInput.value = to;
+        // fromInput.value = to;
+        form.price_min = to;
     } else {
-        fromInput.value = from;
+        // fromInput.value = from;
+        form.price_min = from;
     }
     }
 
@@ -125,9 +127,11 @@
     setToggleAccessible(toSlider);
     if (from <= to) {
         toSlider.value = to;
-        toInput.value = to;
+        // toInput.value = to;
+        form.price_max = to;
     } else {
-        toInput.value = from;
+        // toInput.value = from;
+        form.price_max = from;
         toSlider.value = from;
     }
     }
@@ -175,6 +179,45 @@
         toInput.oninput = () => controlToInput(toSlider, fromInput, toInput, toSlider);  
     })
 
+    const form = reactive({
+        search_input: "",
+        type: [],
+        selling_status: [],
+        price_min: 100,
+        price_max: 3000,
+    })
+    
+    const filterData = async () => {
+        
+        let params = "";
+        if(form.search_input && form.search_input != ""){
+            params += `search_input=${form.search_input}`
+        }
+
+        if(form.type.length > 0){
+            form.type.forEach((item)=> {
+                params += `&type[]=${item}`
+            })
+        }
+
+        if(form.selling_status.length > 0){
+            form.selling_status.forEach((item)=> {
+                params += `&selling_status[]=${item}`
+            })
+        }
+
+        if(form.price_min && form.price_min >= 0){
+            params += `&price_min=${form.price_min}`
+        }
+
+        if(form.price_max && form.price_max >= 0){
+            params += `&price_max=${form.price_max}`
+        }
+
+        console.log(params)
+
+        await commonStore.getBrandProducts(brand_id, params);
+    }
 
 </script>
 

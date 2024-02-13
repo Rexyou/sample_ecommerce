@@ -153,6 +153,13 @@ class Product extends Model
             $query->select('id','name');
         }, 'product_images_filter'])->where([ 'brand_id'=> $request['id'], 'status'=> $this::STATUS_ACTIVE ]);
 
+        if(isset($request['search_input']) && !empty($request['search_input'])){
+            $data = $data->where(function($query) use($request){
+                $query->whereRaw("name LIKE '%".$request['search_input']."%'")
+                        ->orWhereRaw("description LIKE '%".$request['search_input']."%'");
+            });
+        }
+
         if(isset($request['type']) && count($request['type']) > 0){
             $data = $data->whereIn('type', $request['type']);
         }

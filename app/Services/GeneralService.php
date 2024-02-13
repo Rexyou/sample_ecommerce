@@ -75,6 +75,7 @@ class GeneralService{
         
         $validation = [
             'id'=> 'required|integer',
+            'search_input'=> 'sometimes|string',
             'type'=> 'sometimes|array',
             'selling_status'=> 'sometimes|array',
             'price_min'=> 'sometimes|numeric',
