@@ -80,7 +80,7 @@ class GeneralService{
             'selling_status'=> 'sometimes|array',
             'price_min'=> 'sometimes|numeric',
             'price_max'=> 'sometimes|numeric',
-            'sorting'=> 'sometimes|alpha',
+            'sorting'=> 'sometimes|nullable|string|regex:/^[\w\_]+$/',
             'paginate'=> 'sometimes|integer',
         ];
 

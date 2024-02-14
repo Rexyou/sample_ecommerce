@@ -183,7 +183,7 @@ class Product extends Model
         if(isset($request['sorting']) && !empty($request['sorting'])){
             switch ($request['sorting']) {
                 case 'created_asc':
-                    $data = $data->order("created_at");
+                    $data = $data->orderBy("created_at");
                     break;
 
                 case 'created_desc':

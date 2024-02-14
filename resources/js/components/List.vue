@@ -3,7 +3,7 @@
         <div class="sorting_group">
             <div class="item_show">
                 <label for="show_item">Item Show Per Page: </label>
-                <select name="show_item" id="show_item">
+                <select name="show_item" id="show_item" v-model="paginate" @change="changePaginateState">
                     <option value="15">15</option>
                     <option value="30">30</option>
                     <option value="45">45</option>
@@ -11,10 +11,10 @@
             </div>
             <div class="item_sort">
                 <label for="sort_method">Sort By: </label>
-                <select name="sort_method" id="sort_method">
+                <select name="sort_method" id="sort_method" v-model="sorting" @change="changeSortingState">
                     <option value="best_selling">Best Selling</option>
-                    <option value="latest">Latest</option>
-                    <option value="earlier">Earlier</option>
+                    <option value="created_desc">Latest</option>
+                    <option value="created_asc">Earlier</option>
                 </select>
             </div>
         </div>
@@ -63,13 +63,14 @@
     import { ref } from 'vue'
     import { storeToRefs } from "pinia";
     import { useCommonStore } from "../store/general";
-import { useRoute } from 'vue-router';
+    import { useRoute } from 'vue-router';
 
     const route = useRoute()
     const brand_id = route.params.brand_id;
 
     const commonStore = useCommonStore()
-    const { brand_product_list, brand_product_list_pagination } = storeToRefs(commonStore);
+    const { brand_product_list, brand_product_list_pagination, paginate, sorting } = storeToRefs(commonStore);
+    // const currentPaginate = ref(commonStore.paginate)
 
     const currentPage = ref(1);
 
@@ -77,6 +78,9 @@ import { useRoute } from 'vue-router';
         const params = `page=${page}`
         await commonStore.getBrandProducts(brand_id, params);
     };
+
+    const changePaginateState = () => { commonStore.paginate = paginate } 
+    const changeSortingState = () => { commonStore.sorting = sorting } 
 </script>
 
 <style>

@@ -9,6 +9,8 @@ export const useCommonStore = defineStore('common', {
     brand_details: [],
     brand_product_list: [],
     brand_product_list_pagination: [],
+    paginate: 15,
+    sorting: "best_selling"
   }),
   actions: {
     async getComponent(page_name, component) {
@@ -75,6 +77,8 @@ export const useCommonStore = defineStore('common', {
     async getBrandProducts(id, params)
     {
       try {
+        params += `&paginate=${this.paginate}&sorting=${this.sorting}`
+        console.log(params)
         await axiosInstance.get(`/brand/${id}/products?${params}`)
         .then((response)=> {
           console.log("getBrandProduct")
