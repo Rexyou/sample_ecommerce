@@ -26,9 +26,15 @@
                         <div class="name">
                             <span>{{ list.name }}</span>
                         </div>
-                        <div class="price">
-                            <span v-if="list.price_min.original_price == list.price_max.original_price">MYR {{ list.price_min.original_price }}</span>
-                            <span v-else>MYR {{ list.price_min.original_price }} - MYR {{ list.price_max.original_price }}</span>
+                        <div v-if="list.sale_price != 0 && list.sale_price != ''" class="price_sale">
+                            <span>MYR {{ list.sale_price }}</span>
+                            &nbsp;
+                            <span>
+                                <strike>MYR{{ list.price_range }}</strike>
+                            </span>
+                        </div>
+                        <div v-else class="price">
+                            <span>MYR {{ list.price_range }}</span>
                         </div>
                         <div class="selling_status" :style="{ background: '#e3e300' }" v-if="list.selling_status == 0">
                             <span>Preorder</span>
@@ -64,9 +70,10 @@
     import { ref } from 'vue'
     import { storeToRefs } from "pinia";
     import { useCommonStore } from "../store/general";
-    import { useRoute } from 'vue-router';
+    import { useRoute, useRouter } from 'vue-router';
 
     const route = useRoute()
+    const router = useRouter()
     const brand_id = route.params.brand_id;
 
     const commonStore = useCommonStore()
@@ -77,7 +84,7 @@
     const onClickHandler = async (page) => {
         const params = `page=${page}`
         await commonStore.getBrandProducts(brand_id, params);
-        window.scrollTo(0,450);
+        router.push({ name: 'brand', params: { brand_id }, query: { page } })
     };
 
     const changePaginateState = () => { commonStore.paginate = paginate } 
@@ -141,6 +148,7 @@
 
     .list_items .item .name,
     .list_items .item .selling_status,
+    .list_items .item .price_sale,
     .list_items .item .price {
         position: absolute;
         color: white;
@@ -153,6 +161,17 @@
         width: 250px;
         background: red;
         z-index: 2;
+    }
+
+    .list_items .item .price_sale {
+        right: 0px;
+        bottom: 35px;
+        background: red;
+        max-width: 250px;
+        padding: 10px 20px;
+        text-align: center;
+        display: flex;
+        justify-content: space-around;
     }
 
     .list_items .item .price {

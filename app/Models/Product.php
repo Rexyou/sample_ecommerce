@@ -141,8 +141,33 @@ class Product extends Model
     public function getProductPrice()
     {
         $product_option_details = $this->product_option_details()->orderByDesc('original_price')->get([ 'original_price', 'member_price', 'sale_price', 'sale_member_price' ])->toArray();
-        $this->price_min = end($product_option_details);
-        $this->price_max = reset($product_option_details);
+        if(count($product_option_details) == 1){
+            $this->price_range = $product_option_details[0]['original_price'];
+            $this->member_price = $product_option_details[0]['member_price'];
+            $this->sale_price = $product_option_details[0]['sale_price'];
+            $this->sale_member_price = $product_option_details[0]['sale_member_price'];
+        }
+        else {
+            $this->price_min = end($product_option_details);
+            $this->price_max = reset($product_option_details);
+            $this->price_range = $this->price_min['original_price']." - ".$this->price_max['original_price'];
+
+            $this->member_price = "";
+            if($this->price_min['member_price'] != 0 && $this->price_max['member_price'] != 0){
+                $this->member_price = $this->price_min['member_price']." - ".$this->price_max['member_price'];
+            }
+
+            $this->sale_price = "";
+            if($this->price_min['sale_price'] != 0 && $this->price_max['sale_price'] != 0){
+                $this->sale_price = $this->price_min['sale_price']." - ".$this->price_max['sale_price'];
+            }
+
+            $this->sale_member_price = "";
+            if($this->price_min['sale_member_price'] != 0 && $this->price_max['sale_member_price'] != 0){
+                $this->sale_member_price = $this->price_min['sale_member_price']." - ".$this->price_max['sale_member_price'];
+            }
+
+        }
 
         return $this;
     }
