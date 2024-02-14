@@ -77,6 +77,7 @@
     const onClickHandler = async (page) => {
         const params = `page=${page}`
         await commonStore.getBrandProducts(brand_id, params);
+        window.scrollTo(0,450);
     };
 
     const changePaginateState = () => { commonStore.paginate = paginate } 
