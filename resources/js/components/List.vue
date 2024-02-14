@@ -18,38 +18,43 @@
                 </select>
             </div>
         </div>
-        <div class="list_items">
-            <div class="item" v-for="(list, index) in brand_product_list" :key="index" 
-                :style="{ background: `url(${list?.product_images_filter[0].image_url})` }">
-                <div class="name">
-                    <span>{{ list.name }}</span>
-                </div>
-                <div class="price">
-                    <span v-if="list.price_min.original_price == list.price_max.original_price">MYR {{ list.price_min.original_price }}</span>
-                    <span v-else>MYR {{ list.price_min.original_price }} - MYR {{ list.price_max.original_price }}</span>
-                </div>
-                <div class="selling_status" :style="{ background: '#e3e300' }" v-if="list.selling_status == 0">
-                    <span>Preorder</span>
-                </div>
-                <div class="selling_status" :style="{ background: 'green' }" v-if="list.selling_status == 1">
-                    <span>In Stock</span>
-                </div>
-                <div class="selling_status" :style="{ background: 'orange' }" v-if="list.selling_status == 2">
-                    <span>Low Stock</span>
-                </div>
-                <div class="selling_status" :style="{ background: 'black' }" v-if="list.selling_status == 3">
-                    <span>Out Of Stock</span>
+        <div v-if="brand_product_list.length > 0">
+            <div class="list_items">
+                <div class="item" v-for="(list, index) in brand_product_list" :key="index" 
+                    :style="{ background: `url(${list?.product_images_filter[0].image_url})` }">
+                    <div class="name">
+                        <span>{{ list.name }}</span>
+                    </div>
+                    <div class="price">
+                        <span v-if="list.price_min.original_price == list.price_max.original_price">MYR {{ list.price_min.original_price }}</span>
+                        <span v-else>MYR {{ list.price_min.original_price }} - MYR {{ list.price_max.original_price }}</span>
+                    </div>
+                    <div class="selling_status" :style="{ background: '#e3e300' }" v-if="list.selling_status == 0">
+                        <span>Preorder</span>
+                    </div>
+                    <div class="selling_status" :style="{ background: 'green' }" v-if="list.selling_status == 1">
+                        <span>In Stock</span>
+                    </div>
+                    <div class="selling_status" :style="{ background: 'orange' }" v-if="list.selling_status == 2">
+                        <span>Low Stock</span>
+                    </div>
+                    <div class="selling_status" :style="{ background: 'black' }" v-if="list.selling_status == 3">
+                        <span>Out Of Stock</span>
+                    </div>
                 </div>
             </div>
+            <div class="example-one">
+                <vue-awesome-paginate
+                    :total-items="brand_product_list_pagination.total"
+                    :items-per-page="brand_product_list_pagination.per_page"
+                    :max-pages-shown="45"
+                    v-model="currentPage"
+                    :on-click="onClickHandler"
+                />
+            </div>
         </div>
-        <div class="example-one">
-            <vue-awesome-paginate
-                :total-items="brand_product_list_pagination.total"
-                :items-per-page="brand_product_list_pagination.per_page"
-                :max-pages-shown="45"
-                v-model="currentPage"
-                :on-click="onClickHandler"
-            />
+        <div class="no_items_display" v-else>
+            <h1>Currently no products</h1>
         </div>
     </div>
 </template>
@@ -192,5 +197,12 @@ import { useRoute } from 'vue-router';
     
     .active-page:hover {
         background-color: #2988c8;
+    }
+
+    .no_items_display {
+        min-height: 700px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 </style>
