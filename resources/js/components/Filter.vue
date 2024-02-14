@@ -109,37 +109,37 @@
     }
 
     function controlFromSlider(fromSlider, toSlider, fromInput) {
-    const [from, to] = getParsed(fromSlider, toSlider);
-    fillSlider(fromSlider, toSlider, '#C6C6C6', '#e80202', toSlider);
-    if (from > to) {
-        fromSlider.value = to;
-        // fromInput.value = to;
-        form.price_min = to;
-    } else {
-        // fromInput.value = from;
-        form.price_min = from;
-    }
+        const [from, to] = getParsed(fromSlider, toSlider);
+        fillSlider(fromSlider, toSlider, '#C6C6C6', '#e80202', toSlider);
+        if (from > to) {
+            fromSlider.value = to;
+            // fromInput.value = to;
+            form.price_min = to;
+        } else {
+            // fromInput.value = from;
+            form.price_min = from;
+        }
     }
 
     function controlToSlider(fromSlider, toSlider, toInput) {
-    const [from, to] = getParsed(fromSlider, toSlider);
-    fillSlider(fromSlider, toSlider, '#C6C6C6', '#e80202', toSlider);
-    setToggleAccessible(toSlider);
-    if (from <= to) {
-        toSlider.value = to;
-        // toInput.value = to;
-        form.price_max = to;
-    } else {
-        // toInput.value = from;
-        form.price_max = from;
-        toSlider.value = from;
-    }
+        const [from, to] = getParsed(fromSlider, toSlider);
+        fillSlider(fromSlider, toSlider, '#C6C6C6', '#e80202', toSlider);
+        setToggleAccessible(toSlider);
+        if (from <= to) {
+            toSlider.value = to;
+            // toInput.value = to;
+            form.price_max = to;
+        } else {
+            // toInput.value = from;
+            form.price_max = from;
+            toSlider.value = from;
+        }
     }
 
     function getParsed(currentFrom, currentTo) {
-    const from = parseInt(currentFrom.value, 10);
-    const to = parseInt(currentTo.value, 10);
-    return [from, to];
+        const from = parseInt(currentFrom.value, 10);
+        const to = parseInt(currentTo.value, 10);
+        return [from, to];
     }
 
     function fillSlider(from, to, sliderColor, rangeColor, controlSlider) {
@@ -157,12 +157,12 @@
     }
 
     function setToggleAccessible(currentTarget) {
-    const toSlider = document.querySelector('#toSlider');
-    if (Number(currentTarget.value) <= 0 ) {
-        toSlider.style.zIndex = 2;
-    } else {
-        toSlider.style.zIndex = 0;
-    }
+        const toSlider = document.querySelector('#toSlider');
+        if (Number(currentTarget.value) <= 0 ) {
+            toSlider.style.zIndex = 2;
+        } else {
+            toSlider.style.zIndex = 0;
+        }
     }
 
     onMounted(() => {
@@ -214,7 +214,11 @@
             params += `&price_max=${form.price_max}`
         }
 
-        console.log(params)
+        // Filtering the params
+        if(params.charAt(0) == "&")
+        {
+            params = params.slice(1)
+        }
 
         await commonStore.getBrandProducts(brand_id, params);
     }
