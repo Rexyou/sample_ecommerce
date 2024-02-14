@@ -70,7 +70,6 @@
 
     const commonStore = useCommonStore()
     const { brand_product_list, brand_product_list_pagination, paginate, sorting } = storeToRefs(commonStore);
-    // const currentPaginate = ref(commonStore.paginate)
 
     const currentPage = ref(1);
 
