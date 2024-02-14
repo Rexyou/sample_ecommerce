@@ -4,6 +4,7 @@ import homeView from '../views/homeView.vue'
 import productListView from '../views/productListView.vue'
 import brandListView from '../views/brandListView.vue'
 import brandView from '../views/brandView.vue'
+import productView from '../views/productView.vue'
 import { useCommonStore } from '../store/general'
 
 const router = createRouter({
@@ -28,6 +29,11 @@ const router = createRouter({
       path: '/brand/:brand_id/:slug?',
       name: 'brand',
       component: brandView
+    },
+    {
+      path: '/product/:product_id/:slug?',
+      name: 'product',
+      component: productView
     },
     {
       path: '/about',

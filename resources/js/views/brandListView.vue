@@ -11,7 +11,7 @@
                     </div>
                     <div class="list_data">
                         <div v-for="(brand_data, index2) in data" :key="index2" class="brand_container">
-                            <router-link :to="{ name: 'brand', params: { brand_id: brand_data.id }, replace: true }">
+                            <router-link :to="{ name: 'brand', params: { brand_id: brand_data.id } }">
                                 <div v-if="brand_data.icon_image_url !== null" :style="{ backgroundImage: `url(${brand_data.icon_image_url})` }" class="brand_image"></div>
                                 <div v-else class="brand_image_2" :style="{ background: randomColor() }">
                                     <h1>{{ getFirstLetter(brand_data.name) }}</h1>    

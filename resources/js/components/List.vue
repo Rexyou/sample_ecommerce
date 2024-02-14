@@ -20,28 +20,29 @@
         </div>
         <div v-if="brand_product_list.length > 0">
             <div class="list_items">
-                <div class="item" v-for="(list, index) in brand_product_list" :key="index" 
-                    :style="{ background: `url(${list?.product_images_filter[0].image_url})` }">
-                    <div class="name">
-                        <span>{{ list.name }}</span>
-                    </div>
-                    <div class="price">
-                        <span v-if="list.price_min.original_price == list.price_max.original_price">MYR {{ list.price_min.original_price }}</span>
-                        <span v-else>MYR {{ list.price_min.original_price }} - MYR {{ list.price_max.original_price }}</span>
-                    </div>
-                    <div class="selling_status" :style="{ background: '#e3e300' }" v-if="list.selling_status == 0">
-                        <span>Preorder</span>
-                    </div>
-                    <div class="selling_status" :style="{ background: 'green' }" v-if="list.selling_status == 1">
-                        <span>In Stock</span>
-                    </div>
-                    <div class="selling_status" :style="{ background: 'orange' }" v-if="list.selling_status == 2">
-                        <span>Low Stock</span>
-                    </div>
-                    <div class="selling_status" :style="{ background: 'black' }" v-if="list.selling_status == 3">
-                        <span>Out Of Stock</span>
-                    </div>
-                </div>
+                <router-link class="item" v-for="(list, index) in brand_product_list" :key="index" 
+                    :style="{ background: `url(${list?.product_images_filter[0].image_url})` }"
+                    :to="{ name: 'product', params: { product_id: list.id } }">
+                        <div class="name">
+                            <span>{{ list.name }}</span>
+                        </div>
+                        <div class="price">
+                            <span v-if="list.price_min.original_price == list.price_max.original_price">MYR {{ list.price_min.original_price }}</span>
+                            <span v-else>MYR {{ list.price_min.original_price }} - MYR {{ list.price_max.original_price }}</span>
+                        </div>
+                        <div class="selling_status" :style="{ background: '#e3e300' }" v-if="list.selling_status == 0">
+                            <span>Preorder</span>
+                        </div>
+                        <div class="selling_status" :style="{ background: 'green' }" v-if="list.selling_status == 1">
+                            <span>In Stock</span>
+                        </div>
+                        <div class="selling_status" :style="{ background: 'orange' }" v-if="list.selling_status == 2">
+                            <span>Low Stock</span>
+                        </div>
+                        <div class="selling_status" :style="{ background: 'black' }" v-if="list.selling_status == 3">
+                            <span>Out Of Stock</span>
+                        </div>
+                </router-link>
             </div>
             <div class="example-one">
                 <vue-awesome-paginate
