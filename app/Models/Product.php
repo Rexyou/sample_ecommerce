@@ -3,14 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Support\Str;
+use Laravel\Scout\Searchable;
 use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Product extends Model
 {
-    use HasFactory;
+    use HasFactory, Searchable;
 
     protected $guarded = [];
 
@@ -30,6 +32,20 @@ class Product extends Model
     const STATUS_INACTIVE=2;
 
     const PAGINATE=15;
+
+    public function toSearchableArray(): array
+    {
+        return [
+            'name' => $this->name,
+            'code_name' => $this->code_name,
+            'description' => $this->description,
+        ];
+    }
+
+    protected function makeAllSearchableUsing(Builder $query): Builder
+    {
+        return $query->with('brand', 'product_images_filter');
+    }
 
     public function brand()
     {
@@ -176,13 +192,18 @@ class Product extends Model
     {
         $data = $this->with(['brand'=> function($query){
             $query->select('id','name');
-        }, 'product_images_filter'])->where([ 'brand_id'=> $request['id'], 'status'=> $this::STATUS_ACTIVE ]);
+        }, 'product_images_filter'])->where([ 'status'=> $this::STATUS_ACTIVE ]);
 
         if(isset($request['search_input']) && !empty($request['search_input'])){
             $data = $data->where(function($query) use($request){
                 $query->whereRaw("name LIKE '%".$request['search_input']."%'")
+                        ->orWhereRaw("code_name LIKE '%".$request['search_input']."%'")
                         ->orWhereRaw("description LIKE '%".$request['search_input']."%'");
             });
+        }
+
+        if(isset($request['id']) && count($request['id']) > 0){
+            $data = $data->whereIn('brand_id', $request['id']);
         }
 
         if(isset($request['type']) && count($request['type']) > 0){
@@ -232,6 +253,94 @@ class Product extends Model
 
         foreach($data->items() as $item){
             $item = $item->getProductPrice();
+        }
+
+        return successResponse($data);
+    }
+
+    public function getSearchProductList($request, $suggestion=true)
+    {
+        $search = "";
+        if(isset($request['search_input']) && !empty($request['search_input'])){
+            $search = $request['search_input'];
+        }
+
+        $data = $this->search($search)->query(function(Builder $query){ $query->with('brand'); })->where('status', $this::STATUS_ACTIVE);
+        // if($suggestion){
+        //     $data = $data->query(function($query){
+        //         $query->select('id', 'name', 'code_name');
+        //     });
+        // }
+        // else {
+            // $data = $data->query(function($query){
+                // $query->with(['brand'=> function($query){
+                //     $query->select('id','name');
+                // }, 'product_images_filter']);
+                // $query->with('brand');
+            // });
+        // }
+
+        if(isset($request['id']) && count($request['id']) > 0){
+            $data = $data->whereIn('brand_id', $request['id']);
+        }
+
+        if(isset($request['type']) && count($request['type']) > 0){
+            $data = $data->whereIn('type', $request['type']);
+        }
+
+        if(isset($request['selling_status']) && count($request['selling_status']) > 0){
+            $data = $data->whereIn('selling_status', $request['selling_status']);
+        }
+
+        if(isset($request['price_min']) && !empty($request['price_min'])){
+            $data = $data->whereHas('product_option_details', function($query)use($request){
+                $query->whereRaw("original_price >= ".$request['price_min']);
+            });
+        }
+
+        if(isset($request['price_max']) && !empty($request['price_max']) > 0){
+            $data = $data->whereHas('product_option_details', function($query)use($request){
+                $query->whereRaw("original_price <= ".$request['price_max']);
+            });
+        }
+
+        if(isset($request['sorting']) && !empty($request['sorting'])){
+            switch ($request['sorting']) {
+                case 'created_asc':
+                    $data = $data->query(function($query){
+                                $query->orderBy("created_at");
+                            });
+                    break;
+
+                case 'created_desc':
+                    $data = $data->query(function($query){
+                        $query->orderByDesc("created_at");
+                    });
+                    break;
+                
+                default:
+                    $data = $data->query(function($query){
+                        $query->orderByDesc("display_order");
+                    });
+                    break;
+            }
+        }
+        else {
+            $data = $data->query(function($query){
+                $query->orderByDesc("display_order");
+            });
+        }
+
+        $paginate = $this::PAGINATE;
+        if(isset($request['paginate']) && !empty($request['paginate'])){
+            $paginate = $request['paginate'];
+        }
+        $data = $data->paginate($paginate);
+
+        if(!$suggestion){
+            foreach($data->items() as $item){
+                $item = $item->getProductPrice();
+            }
         }
 
         return successResponse($data);

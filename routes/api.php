@@ -13,6 +13,7 @@ Route::prefix('v1')->group(function (){
     Route::get('/brands/{id}/{slug?}', [GeneralController::class, 'getBrand']);
     Route::get('/brand/{id}/products', [GeneralController::class, 'getBrandProducts']);
     Route::get('/product/{id}/{slug?}', [GeneralController::class, 'getProduct']);
+    Route::get('/search', [GeneralController::class, 'getSearchProductList']);
 
     Route::prefix('user')->group(function () {
 
@@ -24,7 +25,6 @@ Route::prefix('v1')->group(function (){
         Route::middleware(['auth:api', 'user_checker'])->group(function () {
             Route::post('logout', [UserController::class, 'logout']);
         });
-
 
     });
 

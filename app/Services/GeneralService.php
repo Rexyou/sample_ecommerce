@@ -72,9 +72,11 @@ class GeneralService{
         if(!$checker['status']){
             return $checker;
         }
+
+        $request->merge([ 'id'=> [ $request->id ] ]);
         
         $validation = [
-            'id'=> 'required|integer',
+            'id'=> 'required|array',
             'search_input'=> 'sometimes|string',
             'type'=> 'sometimes|array',
             'selling_status'=> 'sometimes|array',
@@ -92,6 +94,41 @@ class GeneralService{
         $filter_list = $validated->validated();
 
         return $this->product->getProductList($filter_list);
+    }
+
+    public function getSearchProductList($request, $suggestion)
+    {
+
+        if(gettype($request->id) != "array"){
+            $request->merge([ 'id'=> $request->id ]);
+
+            $checker = $this->brand->getBrand($request);
+            if(!$checker['status']){
+                return $checker;
+            }
+    
+            $request->merge([ 'id'=> [ $request->id ] ]);
+        }
+
+        $validation = [
+            'id'=> 'required|array',
+            'search_input'=> 'sometimes|nullable|string',
+            'type'=> 'sometimes|array',
+            'selling_status'=> 'sometimes|array',
+            'price_min'=> 'sometimes|numeric',
+            'price_max'=> 'sometimes|numeric',
+            'sorting'=> 'sometimes|nullable|string|regex:/^[\w\_]+$/',
+            'paginate'=> 'sometimes|integer',
+        ];
+
+        $validated = Validator::make($request->all(), $validation);
+        if($validated->fails()){
+            return errorResponse("", $validated->messages(), Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        $filter_list = $validated->validated();
+
+        return $this->product->getSearchProductList($filter_list, $suggestion);
     }
 
 }

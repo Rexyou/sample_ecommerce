@@ -14,10 +14,12 @@
     "dependencies": {
         "@egjs/flicking-plugins": "^4.7.1",
         "@egjs/vue3-flicking": "^4.11.2",
+        "lodash": "^4.17.21",
         "oh-vue-icons": "^1.0.0-rc3",
         "pinia": "^2.1.7",
         "pinia-plugin-persistedstate": "^3.2.1",
         "vue-awesome-paginate": "^1.1.46",
-        "vue-router": "^4.2.5"
+        "vue-router": "^4.2.5",
+        "vue3-carousel": "^0.3.1"
     }
 }

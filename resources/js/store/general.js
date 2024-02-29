@@ -3,6 +3,7 @@ import axiosInstance from '../settings/axios'
 
 export const useCommonStore = defineStore('common', {
   state: ()=> ({
+    menu_change_color: false,
     homepage_carousel: [],
     brand_list_page_cover: [],
     brand_list: [],
@@ -10,7 +11,8 @@ export const useCommonStore = defineStore('common', {
     brand_product_list: [],
     brand_product_list_pagination: [],
     paginate: 15,
-    sorting: "best_selling"
+    sorting: "best_selling",
+    product_detail: [],
   }),
   actions: {
     async getComponent(page_name, component) {
@@ -82,6 +84,7 @@ export const useCommonStore = defineStore('common', {
         await axiosInstance.get(`/brand/${id}/products?${params}`)
         .then((response)=> {
           console.log("getBrandProduct")
+          console.log(response.data.data)
           this.brand_product_list = response.data.data.data;
           this.brand_product_list_pagination = response.data.data;
         })
@@ -90,6 +93,23 @@ export const useCommonStore = defineStore('common', {
           console.log(error)
         })
 
+      } catch (error) {
+        console.log("try catch:")
+        console.log(error)
+      }
+    },
+    async getProduct(id){
+      try {
+        await axiosInstance.get(`product/${id}`)
+        .then((response)=> {
+          console.log("get product list")
+          this.product_detail = response.data.data
+        })
+        .catch((error)=> {
+          console.log('axios error:')
+          console.log(error)
+        })
+    
       } catch (error) {
         console.log("try catch:")
         console.log(error)

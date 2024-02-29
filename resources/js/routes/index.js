@@ -50,10 +50,13 @@ router.beforeEach(async (to, from)=> {
   console.log("from route: ", from)
   console.log("to route: ", to)
   const commonStore = useCommonStore()
+  const blackFontPage = [ 'product', 'product_list' ];
 
-  if(to.name == "brand_list"){
-    // await commonStore.getBrandsList()
-    // await commonStore.getComponent('brand_list', 'cover_page'); 
+  if(blackFontPage.includes(to.name)){
+    commonStore.menu_change_color = true;
+  }
+  else {
+    commonStore.menu_change_color = false;
   }
 })
 
