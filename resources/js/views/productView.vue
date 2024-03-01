@@ -182,6 +182,18 @@
         /* width: 200px; */
         flex: 1;
         border-radius: 45px;
+        transition: all .3s ease-in-out;
+    }
+
+    .product_detail .button_action .button_add_to_cart:hover {
+        cursor: pointer;
+        background: #18a200;
+    }
+
+    .product_detail .button_action .button_save_to_list:hover {
+        cursor: pointer;
+        background: #cf6201;
+
     }
 
     .product_detail .button_action .button_add_to_cart svg,
