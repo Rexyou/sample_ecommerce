@@ -99,6 +99,7 @@ export const useCommonStore = defineStore('common', {
       }
     },
     async getProduct(id){
+      this.product_detail = [];
       try {
         await axiosInstance.get(`product/${id}`)
         .then((response)=> {
