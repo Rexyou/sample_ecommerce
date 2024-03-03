@@ -15,6 +15,24 @@
                             <button v-for="(option, index2) in options" :key="index2" :id="index+'_'+index2" @click="currentSelectOption(index, index2)">{{ option }}</button>
                         </div>
                     </div>
+                    <div class="option_list">
+                        <span>Quantity</span>
+                        <div class="option_detail2">
+                            <button @click.prevent="adjustItemQuantity('minus')">
+                                <v-icon name="hi-minus-circle"/>
+                            </button>
+                            <div class="current_quantity">
+                                <span>{{ form.quantity }}</span>
+                            </div>
+                            <button @click.prevent="adjustItemQuantity('add')">
+                                <v-icon name="hi-plus-circle"/>
+                            </button>
+                            <div class="remaining_items">
+                                <span v-if="form.remaining_item == 0">(Remain {{ product_detail.total_quantity }} items)</span>
+                                <span v-else>(Remain {{ form.remaining_item }} items)</span>
+                            </div>
+                        </div>
+                    </div>
                     <div class="button_action">
                         <button class="button_add_to_cart" id="button_add_to_cart">
                             <v-icon name="bi-cart"/>
@@ -35,7 +53,7 @@
 </template>
 
 <script setup>
-    import { reactive, watch } from 'vue'
+    import { reactive, watch, onActivated } from 'vue'
     import { storeToRefs } from 'pinia';
     import { useRoute } from 'vue-router'
     import { useCommonStore } from '../store/general';
@@ -49,16 +67,19 @@
     const commonStore = useCommonStore()
     commonStore.getProduct(product_id)
     const { product_detail } = storeToRefs(commonStore)
-    console.log(product_detail.value)
 
     const form = reactive({
-        product_id: 0
+        product_id: 0,
+        option: null,
+        quantity: 0,
+        remaining_item: 0,
     })
+
+    console.log(product_detail.value)
 
     let currentSelection = {};
     const currentSelectOption = (key, value) => {
 
-        console.log("length: ", Object.keys(currentSelection).length)
         if(Object.keys(currentSelection).length > 0 && (key in currentSelection) && currentSelectOption[key] !== value){
             document.getElementById(`${key+'_'+currentSelection[key]}`).classList.remove('active_option')
         }
@@ -80,9 +101,41 @@
                         document.getElementById("button_add_to_cart").disabled = false;
                     }
 
+                    form.remaining_item = detail.quantity;
+                    form.option = currentSelection
+
                     return form.product_id = detail.id
                 }
             })
+        }
+
+    }
+
+    const adjustItemQuantity = (action) => {
+
+        form.remaining_item = product_detail.value.total_quantity
+        if(form.product_id == 0){
+            const current_option_details = product_detail.value.product_option_details;
+            form.product_id = current_option_details[0].id
+        }
+
+        if(form.remaining_item == 0){
+            return;
+        }
+
+        if(action == "add"){
+
+            if(form.quantity == form.remaining_item){
+                alert('Quantity over limit')
+                return
+            }
+
+            form.quantity += 1;
+        }
+        else {
+            if(form.quantity != 0){
+                form.quantity -= 1;
+            }
         }
 
     }
@@ -146,14 +199,48 @@
         gap: 10px 20px;
     }
 
-    .product_detail .option_list .option_detail button {
-        border-radius: 45px;
+    .product_detail .option_list .option_detail2 {
+        width: 50%;
+        display: grid;
+        grid-template-columns: auto auto auto auto;
+        align-items: center;
     }
-
+    
     .product_detail .option_list .option_detail button {
         background: none;
         border: 0.5px solid #e80202;
         box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        border-radius: 45px;
+    }
+
+    .product_detail .option_detail2 {
+        width: auto;
+        display: flex;
+        align-items: center;
+    }
+
+    .product_detail .option_detail2 button {
+        border: none;
+        box-shadow: none;
+        background: none;
+    }
+
+    .product_detail .option_detail2 .current_quantity {
+        text-align: center;
+        font-size: 30px;
+    }
+
+    .product_detail .option_detail2 button svg {
+        width: 40px;
+        height: 40px;
+    }
+
+    .product_detail .option_detail2 button:hover {
+        cursor: pointer;
+    }
+
+    .product_detail .option_detail2 .remaining_items span {
+        font-size: 16px;
     }
 
     .active_option {

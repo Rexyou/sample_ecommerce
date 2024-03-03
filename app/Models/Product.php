@@ -151,6 +151,11 @@ class Product extends Model
 
         $data = $data->filterProductOptions();
 
+        foreach($data->product_option_details as $option_detail)
+        {
+            $data->total_quantity += $option_detail->quantity;
+        }
+
         return successResponse($data);
     }
 
