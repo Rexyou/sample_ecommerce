@@ -17,7 +17,8 @@ return new class extends Migration
             $table->integer('order_id')->nullable();
             $table->unsignedBigInteger('product_id');
             $table->unsignedBigInteger('product_option_detail_id');
-            $table->decimal('current_price', 8, 2)->default('0.00');
+            $table->decimal('per_unit_price', 8, 2)->default('0.00');
+            $table->decimal('total_price', 8, 2)->default('0.00');
             $table->integer('quantity');
             $table->string('remark')->nullable();
             $table->integer('payment_status')->default(0);

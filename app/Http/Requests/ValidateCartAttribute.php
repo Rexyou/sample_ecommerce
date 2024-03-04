@@ -25,8 +25,9 @@ class ValidateCartAttribute extends FormRequest
             'user_id'=> 'required|integer|exists:users,id',
             'order_id'=> 'sometimes|integer|exists:orders,id',
             'product_id'=> 'required|integer|exists:products,id',
-            'product_option_detail_id'=> 'required|integer|exists:product_option_details,id',
+            'per_unit_price'=> 'required|integer|exists:product_option_details,id',
             'current_price'=> 'required|decimal:2,8',
+            'total_price'=> 'required|decimal:2,8',
             'quantity'=> 'required|integer',
         ];
     }
