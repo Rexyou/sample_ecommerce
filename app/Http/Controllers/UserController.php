@@ -30,4 +30,17 @@ class UserController extends Controller
         $result = $this->userService->logout($request);
         return finalResponse($result);
     }
+
+    public function updateProfile(Request $request)
+    {
+        $result = $this->userService->updateProfile($request);
+        return finalResponse($result);
+    }
+
+    
+    public function getProfile(Request $request)
+    {
+        $result = $this->userService->getProfile($request);
+        return finalResponse($result);
+    }
 }

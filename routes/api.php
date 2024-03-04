@@ -24,6 +24,8 @@ Route::prefix('v1')->group(function (){
 
         Route::middleware(['auth:api', 'user_checker'])->group(function () {
             Route::post('logout', [UserController::class, 'logout']);
+            Route::post('update_profile', [UserController::class, 'updateProfile']);
+            Route::get('profile', [UserController::class, 'getProfile']);
         });
 
     });

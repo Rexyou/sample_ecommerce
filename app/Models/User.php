@@ -3,7 +3,9 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Profile;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Notifications\Notifiable;
 use Symfony\Component\HttpFoundation\Response;
@@ -45,18 +47,41 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 
+    public function profile()
+    {
+        return $this->hasOne(Profile::class);
+    }
+
     public function register($request)
     {
 
         $request['type'] = $this::TYPE_USER;
         $request['password'] = bcrypt($request['password']);
 
-        $creation = $this->create($request);
-        if(!$creation){
-            return errorResponse("", "creation_failure", Response::HTTP_INTERNAL_SERVER_ERROR);
+        DB::beginTransaction();
+
+        try {
+
+            $creation = $this->create($request);
+            if(!$creation){
+                return errorResponse("", "creation_user_failure", Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
+
+            $create_profile = Profile::create([ 'user_id'=> $creation->id ]);
+            if(!$create_profile){
+                return errorResponse("", "creation_profile_failure", Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
+            
+            DB::commit();
+            return successResponse();
+
+        } catch (\Exception $e) {
+
+            DB::rollback();
+            return errorMessageHandler($e);
+
         }
 
-        return successResponse();
     }
 
     public function login($request)
@@ -92,6 +117,7 @@ class User extends Authenticatable implements JWTSubject
         }
 
         $user = Auth::user();
+        $user->profile = $user->profile;
         $user->token = $token;
 
         return successResponse($user);

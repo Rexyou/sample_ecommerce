@@ -19,6 +19,8 @@ return new class extends Migration
             $table->decimal('total_amount', 8, 2)->default('0.00');
             $table->integer('payment_type')->default(1);
             $table->string('reference_id')->nullable();
+            $table->string('address');
+            $table->integer('delivery_type');
             $table->unsignedBigInteger('callback_id')->nullable();
             $table->unsignedBigInteger('handle_by')->default(0);
             $table->integer('payment_status')->default(0);
@@ -32,6 +34,7 @@ return new class extends Migration
             $table->index('user_id');
             $table->index('payment_type');
             $table->index('reference_id');
+            $table->index('delivery_type');
             $table->index('callback_id');
             $table->index('handle_by');
             $table->index('payment_status');
