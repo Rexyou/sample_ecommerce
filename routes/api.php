@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\GeneralController;
@@ -39,5 +40,9 @@ Route::prefix('v1')->group(function (){
         Route::post('create_product_options/{product_id}', [AdminController::class, 'createProductOptions']);
         Route::post('create_product_option_details/{product_id}', [AdminController::class, 'createProductOptionDetails']);
         Route::post('update_product/{product_id}/{status}', [AdminController::class, 'updateProductStatus']);
+    });
+
+    Route::prefix('cart')->middleware([ 'auth:api' ])->group(function () {
+        Route::post('add', [CartController::class, 'addCart']);
     });
 });
