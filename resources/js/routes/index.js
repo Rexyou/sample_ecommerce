@@ -6,9 +6,10 @@ import brandListView from '../views/brandListView.vue'
 import brandView from '../views/brandView.vue'
 import productView from '../views/productView.vue'
 import loginView from '../views/loginView.vue'
-import profileDetailView from '../views/profileDetailView.vue'
-import { useCommonStore } from '../store/general'
-import { useAuthStore } from '../store/auth'
+import profileDetailView from '../views/profileDetailView.vue';
+import registerView from '../views/registerView.vue';
+import { useCommonStore } from '../store/general';
+import { useAuthStore } from '../store/auth';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -49,6 +50,11 @@ const router = createRouter({
       component: loginView
     },
     {
+      path: '/register',
+      name: 'register',
+      component: registerView
+    },
+    {
       path: '/profile',
       name: 'profile',
       component: profileDetailView
@@ -69,7 +75,7 @@ router.beforeEach(async (to, from)=> {
 
   const blackFontPage = [ 'product', 'product_list', 'login' ];
   const authPage = [ 'profile' ];
-  const guestPage = [ 'login' ];
+  const guestPage = [ 'login', 'register' ];
   
   if(authPage.includes(to.name) && Object.keys(authUserData).length == 0 && token == null){
     return { name: 'login' }
