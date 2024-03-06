@@ -1,5 +1,5 @@
 !<template>
-    <div class="navigation_bar">
+    <div class="navigation_bar" :style="setting.show_navbar ? { display: 'flex' } : { display: 'none' }">
         <div class="logo">
             <img src="https://scontent.fkul15-1.fna.fbcdn.net/v/t39.30808-6/312912063_487774336709363_1010814458414550901_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=efb6e6&_nc_eui2=AeG3SsNyvkR9EW4DWk4sOKd63tLcvq6Xkxfe0ty-rpeTFw73fkyjWy5EKy-5SnwQbeLEo4DNWk6B8KwjAg7pIViL&_nc_ohc=kmccWQwdYFoAX-9Z4P_&_nc_ht=scontent.fkul15-1.fna&oh=00_AfCZcZeeJ510hc7WZwAl1xb4IeDCdafZqp1h_XqYkbTxrA&oe=65A5C632" alt="">
         </div>
@@ -11,18 +11,45 @@
         </div>
         <div class="search_bar" :style="[ menu_change_color ? { color: 'black' } : { color: 'white' } ]">
             <v-icon name="bi-search"/>
-            <v-icon name="bi-people-fill"/>
+            <router-link :to="{ name: 'login' }">
+                <v-icon name="bi-people-fill"/>
+            </router-link>
             <v-icon name="bi-cart"/>
         </div>
+    </div>
+    <div class="navigation_bar_2">
+        <v-icon name="bi-arrow-left-square"/>
+        <router-link :to="{ name: setting.previous_page_name }">Back To Previous Page</router-link>
     </div>
 </template>
 
 <script setup>
     import { storeToRefs } from "pinia";
     import { useCommonStore } from "../store/general";
+    import { useRoute } from 'vue-router'
+    import { reactive, watch } from 'vue'
 
     const commonStore = useCommonStore();
     const { menu_change_color } = storeToRefs(commonStore);
+
+    const setting = reactive({
+        show_navbar: true,
+        show_home: false,
+        previous_page_name: 'home'
+    })
+
+    const route = useRoute();
+    watch(route, (newRoute)=>{
+        if(newRoute.name == "login"){
+            setting.show_navbar= false
+            setting.show_home = true
+        }
+        else {
+            setting.show_navbar= true
+            setting.show_home = false
+        }
+    })
+
 </script>
 
 <style scoped>
@@ -76,5 +103,27 @@
     .navigation_bar .search_bar svg {
         width: 30px;
         height: 30px;
+    }
+
+    .navigation_bar_2 {
+        position: absolute;
+        left: 50px;
+        top: 50px;
+        color: white;
+        font-size: 25px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .navigation_bar_2 svg {
+        width: 25px;
+        height: 25px;
+        margin-right: 10px;
+    }
+
+    .navigation_bar_2 a {
+        text-decoration: none;
+        color: white;
     }
 </style>

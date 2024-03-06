@@ -5,6 +5,7 @@ import productListView from '../views/productListView.vue'
 import brandListView from '../views/brandListView.vue'
 import brandView from '../views/brandView.vue'
 import productView from '../views/productView.vue'
+import loginView from '../views/loginView.vue'
 import { useCommonStore } from '../store/general'
 
 const router = createRouter({
@@ -40,6 +41,11 @@ const router = createRouter({
       name: 'about',
       component: aboutView
     },
+    {
+      path: '/login',
+      name: 'login',
+      component: loginView
+    },
   ],
   scrollBehavior() {
     return { top: 0, left: 0 }
@@ -50,7 +56,7 @@ router.beforeEach(async (to, from)=> {
   console.log("from route: ", from)
   console.log("to route: ", to)
   const commonStore = useCommonStore()
-  const blackFontPage = [ 'product', 'product_list' ];
+  const blackFontPage = [ 'product', 'product_list', 'login' ];
 
   if(blackFontPage.includes(to.name)){
     commonStore.menu_change_color = true;
