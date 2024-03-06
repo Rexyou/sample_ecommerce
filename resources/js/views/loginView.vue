@@ -15,6 +15,7 @@
                         <input type="password" placeholder="password" id="password" v-model="form.password">
                     </div>
                     <button @click.prevent="login()">Login</button>
+                    <p>If you don't have an account. Please go to <router-link :to="{ name: 'register' }">here</router-link></p>
                 </form>
             </div>
         </div>
@@ -53,15 +54,15 @@
     }
 
     .background_image {
-        width: 70%;
+        width: 65%;
         height: 100%;
         /* border-radius: 45px; */
     }
 
     .login_detail {
-        width: 30%;
+        width: 35%;
         height: 100%;
-        background: rgba(0, 0, 0, 0.7);
+        background: rgba(0, 0, 0, 0.75);
         color: white;
     }
 
@@ -96,17 +97,29 @@
     }
 
     .login_form button {
-        font-size: 25px;
+        font-size: 24px;
         border: none;
         background: #ff1818;
         padding: 14px 20px;
         margin: 15px 0px;
         color: white;
         transition: all .3s ease-in-out;
+        border-radius: 15px;
     }
 
     .login_form button:hover {
         background: #a70000;
         cursor: pointer;
+    }
+
+    .login_form p {
+        font-size: 14px;
+        text-align: center;
+        margin: 10px 0px;
+    }
+
+    .login_form p a{
+        text-decoration: none;
+        color: red;
     }
 </style>

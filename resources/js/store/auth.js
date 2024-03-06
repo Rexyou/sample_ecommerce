@@ -27,6 +27,22 @@ export const useAuthStore = defineStore('auth', {
                 console.log("try catch:")
                 console.log(error)
             }
+        },
+        async register(data){
+            try {
+                await axiosInstance.post(`/user/register`, data)
+                .then(async (response)=> {
+                    console.log(response)
+                })
+                .catch((error)=> {
+                    console.log('axios error:')
+                    console.log(error)
+                })
+
+            } catch (error) {
+                console.log("try catch:")
+                console.log(error)
+            }
         }
     }
 });
