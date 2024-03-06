@@ -6,7 +6,9 @@ import brandListView from '../views/brandListView.vue'
 import brandView from '../views/brandView.vue'
 import productView from '../views/productView.vue'
 import loginView from '../views/loginView.vue'
+import profileDetailView from '../views/profileDetailView.vue'
 import { useCommonStore } from '../store/general'
+import { useAuthStore } from '../store/auth'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -46,6 +48,11 @@ const router = createRouter({
       name: 'login',
       component: loginView
     },
+    {
+      path: '/profile',
+      name: 'profile',
+      component: profileDetailView
+    },
   ],
   scrollBehavior() {
     return { top: 0, left: 0 }
@@ -56,7 +63,20 @@ router.beforeEach(async (to, from)=> {
   console.log("from route: ", from)
   console.log("to route: ", to)
   const commonStore = useCommonStore()
+  const authStore = useAuthStore();
+  const authUserData = authStore.user_data;
+  const token = authStore.token;
+
   const blackFontPage = [ 'product', 'product_list', 'login' ];
+  const authPage = [ 'profile' ];
+  const guestPage = [ 'login' ];
+  
+  if(authPage.includes(to.name) && Object.keys(authUserData).length == 0 && token == null){
+    return { name: 'login' }
+  }
+  else if(guestPage.includes(to.name) && Object.keys(authUserData).length != 0 && token != null){
+    return { name: 'profile' }
+  }
 
   if(blackFontPage.includes(to.name)){
     commonStore.menu_change_color = true;
