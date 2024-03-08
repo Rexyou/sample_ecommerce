@@ -19,7 +19,7 @@
     </div>
     <div class="navigation_bar_2">
         <v-icon name="bi-arrow-left-square"/>
-        <router-link :to="{ name: setting.previous_page_name }">Back To Previous Page</router-link>
+        <router-link :to="{ name: setting.previous_page_name }">Back</router-link>
     </div>
 </template>
 
@@ -118,8 +118,8 @@
 
     .navigation_bar_2 {
         position: absolute;
-        left: 50px;
-        top: 50px;
+        left: 40px;
+        top: 40px;
         color: white;
         font-size: 25px;
         display: flex;

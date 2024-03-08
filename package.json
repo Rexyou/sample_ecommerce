@@ -14,6 +14,8 @@
     "dependencies": {
         "@egjs/flicking-plugins": "^4.7.1",
         "@egjs/vue3-flicking": "^4.11.2",
+        "@vuelidate/core": "^2.0.3",
+        "@vuelidate/validators": "^2.0.4",
         "lodash": "^4.17.21",
         "oh-vue-icons": "^1.0.0-rc3",
         "pinia": "^2.1.7",

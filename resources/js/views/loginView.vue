@@ -9,13 +9,19 @@
                     <div class="login_data">
                         <label for="username">Username</label>
                         <input type="text" placeholder="username/email/phone_number" id="username" v-model="form.login">
+                        <span v-for="error in v$.login.$errors" :key="error.$uid" class="error_message">
+                                {{ error.$message }}
+                        </span>
                     </div>
                     <div class="login_data">
                         <label for="password">Password</label>
                         <input type="password" placeholder="password" id="password" v-model="form.password">
+                        <span v-for="error in v$.password.$errors" :key="error.$uid" class="error_message">
+                            {{ error.$message }}
+                        </span>
                     </div>
                     <button @click.prevent="login()">Login</button>
-                    <p>If you don't have an account. Please go to <router-link :to="{ name: 'register' }">here</router-link></p>
+                    <p>If you don't have an account. Please register <router-link :to="{ name: 'register' }">here</router-link></p>
                 </form>
             </div>
         </div>
@@ -24,7 +30,9 @@
 
 <script setup>
     import { useAuthStore } from '../store/auth';
-    import { reactive } from 'vue'
+    import { reactive, computed } from 'vue'
+    import { useVuelidate } from '@vuelidate/core' // plugin
+    import { required, email, minLength, maxLength } from '@vuelidate/validators' // property
 
     const authStore = useAuthStore();
 
@@ -34,9 +42,23 @@
         type: 1,
     })
 
-    const login = () => {
-        console.log("current form: ", form)
-        authStore.login(form)
+    const rules = computed(()=> {
+        return {
+            login: { required, minLength: minLength(8) },
+            password: { required, minLength: minLength(8), maxLength: maxLength(16) },
+            type: 1
+        } 
+    })
+
+    const v$ = useVuelidate(rules, form)
+
+    const login = async () => {
+
+        const result = await v$.value.$validate(); // check validation
+        if(result){
+            console.log("current form: ", form)
+            authStore.login(form)
+        }
     }
 </script>
 
@@ -51,6 +73,7 @@
         background-size: cover;
         object-fit: cover;
         background-position: center;
+        overflow: hidden;
     }
 
     .background_image {
@@ -92,15 +115,21 @@
     }
 
     .login_form .login_data input {
-        font-size: 18px;
-        padding: 14px;
+        font-size: 16px;
+        padding: 12px;
+    }
+
+    .login_form .login_data .error_message {
+        color: red;
+        font-size: 16px;
+        margin: 10px 0px 0px;
     }
 
     .login_form button {
         font-size: 24px;
         border: none;
         background: #ff1818;
-        padding: 14px 20px;
+        padding: 12px 20px;
         margin: 15px 0px;
         color: white;
         transition: all .3s ease-in-out;
@@ -121,5 +150,26 @@
     .login_form p a{
         text-decoration: none;
         color: red;
+    }
+
+    @media screen and (max-width: 1000px) {
+        .background_image {
+            width: 50%;
+
+        }
+
+        .login_detail {
+            width: 50%;
+        }
+    }
+
+    @media screen and (max-width: 800px) {
+        .background_image {
+            width: 0%;
+        }
+
+        .login_detail {
+            width: 100%;
+        }
     }
 </style>
