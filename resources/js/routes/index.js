@@ -8,6 +8,7 @@ import productView from '../views/productView.vue'
 import loginView from '../views/loginView.vue'
 import profileDetailView from '../views/profileDetailView.vue';
 import registerView from '../views/registerView.vue';
+import cartView from '../views/cartView.vue';
 import { useCommonStore } from '../store/general';
 import { useAuthStore } from '../store/auth';
 
@@ -59,6 +60,11 @@ const router = createRouter({
       name: 'profile',
       component: profileDetailView
     },
+    {
+      path: '/cart',
+      name: 'cart',
+      component: cartView
+    },
   ],
   scrollBehavior() {
     return { top: 0, left: 0 }
@@ -74,7 +80,7 @@ router.beforeEach(async (to, from)=> {
   const token = authStore.token;
 
   const blackFontPage = [ 'product', 'product_list', 'login' ];
-  const authPage = [ 'profile' ];
+  const authPage = [ 'profile', 'cart' ];
   const guestPage = [ 'login', 'register' ];
   
   if(authPage.includes(to.name) && Object.keys(authUserData).length == 0 && token == null){

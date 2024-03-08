@@ -26,8 +26,8 @@
 <script setup>
     import { storeToRefs } from "pinia";
     import { useCommonStore } from "../store/general";
-    import { useRoute } from 'vue-router'
-    import { reactive, watch } from 'vue'
+    import { useRoute, useRouter } from 'vue-router'
+    import { reactive } from 'vue'
 
     const commonStore = useCommonStore();
     const { menu_change_color } = storeToRefs(commonStore);
@@ -39,8 +39,19 @@
     })
 
     const route = useRoute();
-    watch(route, (newRoute)=>{
-        if(newRoute.name == "login"){
+    const router = useRouter()
+
+    router.afterEach(async (to, from) => {
+        if(from.name != undefined && to.name != from.name){
+            setting.previous_page_name = from.name
+        }
+        else {
+            setting.previous_page_name = 'home';
+        }
+
+        const hideNavigationPage = [ 'login', 'register' ];
+
+        if(hideNavigationPage.includes(to.name)){
             setting.show_navbar= false
             setting.show_home = true
         }
