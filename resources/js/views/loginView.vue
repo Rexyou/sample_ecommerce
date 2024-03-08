@@ -20,7 +20,7 @@
                             {{ error.$message }}
                         </span>
                     </div>
-                    <button @click.prevent="login()">Login</button>
+                    <button @click.prevent="login()" :disabled="process" id="button_login">Login</button>
                     <p>If you don't have an account. Please register <router-link :to="{ name: 'register' }">here</router-link></p>
                 </form>
             </div>
@@ -33,8 +33,11 @@
     import { reactive, computed } from 'vue'
     import { useVuelidate } from '@vuelidate/core' // plugin
     import { required, email, minLength, maxLength } from '@vuelidate/validators' // property
+    import { storeToRefs } from 'pinia';
 
     const authStore = useAuthStore();
+    // let { process } = storeToRefs(authStore)
+    let process = computed(()=> authStore.process)
 
     const form = reactive({
         login: "",
@@ -56,9 +59,9 @@
 
         const result = await v$.value.$validate(); // check validation
         if(result){
-            console.log("current form: ", form)
             authStore.login(form)
         }
+
     }
 </script>
 
@@ -68,11 +71,11 @@
         height: 100vh;
         background-image: #ebeaea;
         display: flex;
-        /* padding: 70px 50px; */
         background: url('https://images.unsplash.com/photo-1644898262501-6e73916dce2e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
-        background-size: cover;
-        object-fit: cover;
-        background-position: center;
+        background-size: cover !important;
+        object-fit: cover !important;
+        background-position: center !important;
+        background-repeat: no-repeat !important;
         overflow: hidden;
     }
 
@@ -109,6 +112,10 @@
         margin: 10px 0px;
     }
 
+    .login_form #button_login:disabled {
+        background: #444444;
+    }
+
     .login_form .login_data label {
         font-size: 20px;
         margin: 5px 0px;
@@ -117,6 +124,13 @@
     .login_form .login_data input {
         font-size: 16px;
         padding: 12px;
+        background: rgba(255, 255, 255, 0.6);
+        border: none;
+    }
+
+    .login_form .login_data input:focus {
+        background: rgba(255, 255, 255, 0.9);
+        outline: none;
     }
 
     .login_form .login_data .error_message {
@@ -164,6 +178,11 @@
     }
 
     @media screen and (max-width: 800px) {
+
+        .login {
+            background: url('https://s3.amazonaws.com/tf.images/reduced-image_22826_4_1679888413.jpeg');
+        }
+
         .background_image {
             width: 0%;
         }

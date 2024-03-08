@@ -5,15 +5,18 @@ export const useAuthStore = defineStore('auth', {
     state: ()=> ({
         user_data: [],
         token: null,
+        process: false,
     }),
     persist: {
         storage: sessionStorage,
     },
     actions: {
         async login(data){
+            this.process = true
             try {
                 await axiosInstance.post(`/user/login`, data)
                 .then(async (response)=> {
+                    this.process = false
                     this.user_data = response.data.data
                     this.token = response.data.data.token
                     await this.router.push({ name: 'profile' }); 
@@ -21,11 +24,13 @@ export const useAuthStore = defineStore('auth', {
                 .catch((error)=> {
                     console.log('axios error:')
                     console.log(error)
+                    this.process = false
                 })
 
             } catch (error) {
                 console.log("try catch:")
                 console.log(error)
+                this.process = false
             }
         },
         async register(data){
