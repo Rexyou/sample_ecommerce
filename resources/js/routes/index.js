@@ -9,6 +9,7 @@ import loginView from '../views/loginView.vue'
 import profileDetailView from '../views/profileDetailView.vue';
 import registerView from '../views/registerView.vue';
 import cartView from '../views/cartView.vue';
+import errorView from '../views/errorView.vue';
 import { useCommonStore } from '../store/general';
 import { useAuthStore } from '../store/auth';
 
@@ -31,12 +32,12 @@ const router = createRouter({
       component: brandListView
     },
     {
-      path: '/brand/:brand_id/:slug?',
+      path: '/brand/:brand_id?/:slug?',
       name: 'brand',
       component: brandView
     },
     {
-      path: '/product/:product_id/:slug?',
+      path: '/product/:product_id?/:slug?',
       name: 'product',
       component: productView
     },
@@ -64,6 +65,11 @@ const router = createRouter({
       path: '/cart',
       name: 'cart',
       component: cartView
+    },
+    { 
+      path: '/:pathMatch(.*)*', 
+      name: 'error',
+      component: errorView 
     },
   ],
   scrollBehavior() {
@@ -95,6 +101,10 @@ router.beforeEach(async (to, from)=> {
   }
   else {
     commonStore.menu_change_color = false;
+  }
+
+  if((to.name == "brand" && to.params.brand_id == "") || (to.name == "product" && to.params.product_id == "")){
+    return { name: 'error' }
   }
 })
 

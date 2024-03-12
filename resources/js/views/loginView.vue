@@ -15,6 +15,8 @@
                     </div>
                     <div class="login_data">
                         <label for="password">Password</label>
+                        <v-icon name="bi-eye-fill" class="password_watch"/>
+                        <v-icon name="bi-eye-slash-fill" class="password_watch"/>
                         <input type="password" placeholder="password" id="password" v-model="form.password">
                         <span v-for="error in v$.password.$errors" :key="error.$uid" class="error_message">
                             {{ error.$message }}
@@ -88,7 +90,7 @@
     .login_detail {
         width: 35%;
         height: 100%;
-        background: rgba(0, 0, 0, 0.75);
+        background: rgba(0, 0, 0, 0.8);
         color: white;
     }
 
@@ -110,6 +112,7 @@
         display: flex;
         flex-direction: column;
         margin: 10px 0px;
+        position: relative;
     }
 
     .login_form #button_login:disabled {
@@ -164,6 +167,14 @@
     .login_form p a{
         text-decoration: none;
         color: red;
+    }
+
+    .password_watch {
+        position: absolute;
+        bottom: 5px;
+        right: 10px;
+        width: 30px;
+        height: 30px;
     }
 
     @media screen and (max-width: 1000px) {

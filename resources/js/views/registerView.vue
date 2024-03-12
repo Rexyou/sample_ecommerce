@@ -60,9 +60,9 @@
         display: flex;
         /* padding: 70px 50px; */
         background: url('https://images.unsplash.com/photo-1631797683906-fb7cd87b9c9b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
-        background-size: cover;
-        object-fit: cover;
-        background-position: center;
+        background-size: cover !important;
+        object-fit: cover !important;
+        background-position: center !important;
     }
 
     .background_image {
@@ -133,5 +133,31 @@
     .register_form p a{
         text-decoration: none;
         color: red;
+    }
+
+    @media screen and (max-width: 1000px) {
+        .background_image {
+            width: 50%;
+
+        }
+
+        .register_detail {
+            width: 50%;
+        }
+    }
+
+    @media screen and (max-width: 800px) {
+
+        .register {
+            background: url('https://s3.amazonaws.com/tf.images/reduced-image_22826_4_1679888413.jpeg');
+        }
+
+        .background_image {
+            width: 0%;
+        }
+
+        .register_detail {
+            width: 100%;
+        }
     }
 </style>
