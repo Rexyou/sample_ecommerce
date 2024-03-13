@@ -15,9 +15,9 @@
                     </div>
                     <div class="login_data">
                         <label for="password">Password</label>
-                        <v-icon name="bi-eye-fill" class="password_watch"/>
-                        <v-icon name="bi-eye-slash-fill" class="password_watch"/>
-                        <input type="password" placeholder="password" id="password" v-model="form.password">
+                        <v-icon name="bi-eye-fill" class="password_watch" @click="switchVisibility()" v-show="showPassword.show"/>
+                        <v-icon name="bi-eye-slash-fill" class="password_watch" @click="switchVisibility()" v-show="!showPassword.show"/>
+                        <input :type="showPassword.type" placeholder="password" id="password" v-model="form.password">
                         <span v-for="error in v$.password.$errors" :key="error.$uid" class="error_message">
                             {{ error.$message }}
                         </span>
@@ -40,6 +40,11 @@
     const authStore = useAuthStore();
     // let { process } = storeToRefs(authStore)
     let process = computed(()=> authStore.process)
+
+    const showPassword = reactive({
+        show: false,
+        type: "password"
+    })
 
     const form = reactive({
         login: "",
@@ -64,6 +69,16 @@
             authStore.login(form)
         }
 
+    }
+
+    const switchVisibility = () => {
+        showPassword.show = !showPassword.show
+        if(showPassword.show){
+            showPassword.type = "text"
+        }
+        else {
+            showPassword.type = "password"
+        }
     }
 </script>
 
@@ -129,6 +144,7 @@
         padding: 12px;
         background: rgba(255, 255, 255, 0.6);
         border: none;
+        padding-right: 50px;
     }
 
     .login_form .login_data input:focus {
@@ -171,10 +187,15 @@
 
     .password_watch {
         position: absolute;
-        bottom: 5px;
+        bottom: 6px;
         right: 10px;
         width: 30px;
         height: 30px;
+        color: black;
+    }
+
+    .password_watch:hover {
+        cursor: pointer;
     }
 
     @media screen and (max-width: 1000px) {
