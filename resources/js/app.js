@@ -11,6 +11,8 @@ import { OhVueIcon, addIcons } from "oh-vue-icons";
 import { BiSearch, BiPeopleFill, BiCart, BiBookmark, HiMinusCircle, HiPlusCircle, BiArrowLeftSquare, BiEyeFill, BiEyeSlashFill } from "oh-vue-icons/icons";
 import VueAwesomePaginate from "vue-awesome-paginate";
 import "vue-awesome-paginate/dist/style.css";
+import Vue3Toasity from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
 
 addIcons(BiSearch, BiPeopleFill, BiCart, BiBookmark, HiMinusCircle, HiPlusCircle, BiArrowLeftSquare, BiEyeFill, BiEyeSlashFill);
 
@@ -24,6 +26,7 @@ pinia.use(({ store }) => {
 app.use(pinia)
 app.use(router)
 app.use(VueAwesomePaginate)
+app.use(Vue3Toasity, { autoClose: 3000, limit: 2 })
 
 // Gloabal Component
 app.component("Flicking", Flicking);    

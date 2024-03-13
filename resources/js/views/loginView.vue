@@ -63,12 +63,10 @@
     const v$ = useVuelidate(rules, form)
 
     const login = async () => {
-
         const result = await v$.value.$validate(); // check validation
         if(result){
             authStore.login(form)
         }
-
     }
 
     const switchVisibility = () => {
