@@ -14,13 +14,16 @@ return new class extends Migration
         Schema::create('profiles', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
+            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
+            $table->tinyInteger('gender')->nullable();
             $table->string('image_url')->nullable();
+            $table->date('dob')->nullable();
             $table->string('country', 3)->nullable();
             $table->string('state')->nullable();
             $table->string('city')->nullable();
             $table->json('addresses')->nullable();
             $table->json('preferences')->nullable();
-            $table->date('dob')->nullable();
             $table->integer('status')->default(1);
             $table->timestamps();
 
@@ -29,6 +32,7 @@ return new class extends Migration
             $table->fulltext('addresses');
             $table->unique('user_id');
             $table->index('user_id');
+            $table->index('gender');
             $table->index('country');
             $table->index('state');
             $table->index('city');

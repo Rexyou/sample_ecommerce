@@ -22,6 +22,9 @@ class ValidateProfileAttribute extends FormRequest
     public function rules(): array
     {
         return [
+            'first_name'=> 'sometimes|between:1,255|regex:/^[\w\s.]+$/',
+            'last_name'=> 'sometimes|between:1,255|regex:/^[\w\s.]+$/',
+            'gender'=> 'sometimes|integer|in:1,2',
             'image_url'=> 'sometimes|url',
             'country'=> 'sometimes|string|regex:/^[A-Z]{2,3}$/',
             'state'=> 'sometimes|string|between:1,255',
@@ -30,7 +33,7 @@ class ValidateProfileAttribute extends FormRequest
             'addresses.*.remark'=> 'required|string|max:255',
             'addresses.*.address'=> 'required|string|max:255',
             'preferences'=> 'sometimes|array|min:1',
-            'preferences.remember_me'=> 'required|integer|in:0,1',
+            'preferences.remember_me'=> 'sometimes|integer|in:0,1',
             'dob'=> 'sometimes|date',
         ];
     }

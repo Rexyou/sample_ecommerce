@@ -85,7 +85,7 @@ router.beforeEach(async (to, from)=> {
   const authUserData = authStore.user_data;
   const token = authStore.token;
 
-  const blackFontPage = [ 'product', 'product_list', 'login' ];
+  const blackFontPage = [ 'product', 'product_list', 'login', 'profile' ];
   const authPage = [ 'profile', 'cart' ];
   const guestPage = [ 'login', 'register' ];
   

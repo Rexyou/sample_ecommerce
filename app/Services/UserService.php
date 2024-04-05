@@ -63,7 +63,12 @@ class UserService{
         $filter_list = $validator->validated();
         $profile = Auth::user()->profile;
 
-        return $this->profile->updateProfile($filter_list, $profile);
+        $result = $this->profile->updateProfile($filter_list, $profile);
+        if($result['status']){
+            return $this->getProfile($request);
+        }
+
+        return $result;
     }
 
     public function getProfile($request)

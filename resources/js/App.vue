@@ -1,4 +1,4 @@
-!<template>
+<template>
     <div>
         <Navigation />
         <router-view></router-view>
