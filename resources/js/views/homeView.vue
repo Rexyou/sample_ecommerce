@@ -1,27 +1,7 @@
 <template>
     <div>
         <Slider :carousel-list="homepage_carousel" type="homepage_carousel" />
-        <div><h1>sample</h1></div>
-        <div><h1>sample</h1></div>
-        <div><h1>sample</h1></div>
-        <div><h1>sample</h1></div>
-        <div><h1>sample</h1></div>
-        <div><h1>sample</h1></div>
-        <div><h1>sample</h1></div>
-        <div><h1>sample</h1></div>
-        <div><h1>sample</h1></div>
-        <div><h1>sample</h1></div>
-        <div><h1>sample</h1></div>
-        <div><h1>sample</h1></div>
-        <div><h1>sample</h1></div>
-        <div><h1>sample</h1></div>
-        <div><h1>sample</h1></div>
-        <div><h1>sample</h1></div>
-        <div><h1>sample</h1></div>
-        <div><h1>sample</h1></div>
-        <div><h1>sample</h1></div>
-        <div><h1>sample</h1></div>
-        <div><h1>sample</h1></div>
+        <TopSelling />
     </div>
 </template>
 
@@ -29,6 +9,7 @@
     import { storeToRefs } from 'pinia'
     import { useCommonStore } from '../store/general'
     import Slider from '../components/Slider.vue'
+    import TopSelling from '../components/TopSelling.vue'
 
     const commonStore = useCommonStore();
     commonStore.getComponent('home', 'carousel');
