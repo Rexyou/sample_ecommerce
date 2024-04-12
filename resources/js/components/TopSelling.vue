@@ -17,7 +17,7 @@
     .top_selling {
         width: 100%;
         height: 100vh;
-        padding: 40px;
+        padding: 30px 80px;
         color: white;
         background: rgb(0, 0, 0);
     }
@@ -128,6 +128,10 @@
     }
 
     @media screen and (max-width: 800px) {
+
+        .top_selling {
+            padding: 20px 30px;
+        }
 
         .top_selling h1 {
             font-size: 30px;
