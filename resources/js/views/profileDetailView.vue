@@ -5,6 +5,9 @@
                 <div class="title" v-for="(item, index) in tab_items" :key="index" :class="{ 'active': setting.current_tab == index }" @click="changeTab(index)" :id="index">
                     <b>{{ item }}</b>
                 </div>
+                <div class="title logout" @click="logout" :disabled="process">
+                    <b>Logout</b>
+                </div>
             </div>
             <div class="tab_content" v-for="(item, index) in tab_items" :key="index" :class="{ 'active': setting.current_tab == index }" :id="index">
                 <div v-if="setting.current_tab == 'user_info'" class="user_info_data">
@@ -202,6 +205,11 @@
         return type == 'city' ? answer.city_label : answer.label;
     }
 
+    const logout = () => {
+        console.log("proceed to logout")
+        authStore.logout()
+    }
+
 </script>
 
 <style scoped>
@@ -230,6 +238,12 @@
         padding: 10px;
         color: rgba(0, 0, 0, 0.4);
         transition: all .3s ease-in-out;
+    }
+
+    .tab_items .title.logout {
+        background: red;
+        color: white;
+        border-right: 7px solid white;
     }
 
     .tab_items .title:hover {

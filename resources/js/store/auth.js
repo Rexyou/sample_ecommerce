@@ -118,6 +118,41 @@ export const useAuthStore = defineStore('auth', {
                 console.log(error)
             }
 
+        },
+        async logout(){
+            this.process = true
+            console.log(`current token ${this.token}`)
+            try {                                
+                await axiosInstance.post(`/user/logout`, {}, {
+                    headers: {
+                      'Authorization': `Bearer ${this.token}`
+                    }
+                })
+                .then(async (response)=> {
+                    this.process = false
+                    console.log("logout: ")
+                    console.log(response.data)
+                    this.user_data = []
+                    this.token = null
+                    await this.router.push({ name: 'login' }); 
+                    toast.success("Logout success");
+                })
+                .catch(async (error)=> {
+                    this.process = false
+                    console.log('axios error:')
+                    console.log(error)
+                    if(error.response.data.code == 401){
+                        this.user_data = []
+                        this.token = null
+                        await this.router.push({ name: 'login' }); 
+                        toast.error(error.response.data.message);
+                    }
+                })
+                
+            } catch (error) {
+                console.log("try catch:")
+                console.log(error)
+            }
         }
     }
 });
