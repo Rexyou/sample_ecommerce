@@ -5,6 +5,7 @@ export const useCommonStore = defineStore('common', {
   state: ()=> ({
     menu_change_color: false,
     homepage_carousel: [],
+    homepage_top_selling: [],
     brand_list_page_cover: [],
     brand_list: [],
     brand_details: [],
@@ -23,11 +24,12 @@ export const useCommonStore = defineStore('common', {
             if(page_name === "home" && component === "carousel"){
               this.homepage_carousel = response.data.data.data
             }
-            else{
-              console.log("working")
+            else if(page_name === "home" && component === "top_selling"){
               console.log(response.data.data)
+              this.homepage_top_selling = response.data.data.data
+            }
+            else{
               this.brand_list_page_cover = response.data.data
-              console.log("cover: ", this.brand_list_page_cover)
             }
 
         })
