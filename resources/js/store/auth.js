@@ -5,6 +5,7 @@ import { toast } from 'vue3-toastify';
 export const useAuthStore = defineStore('auth', {
     state: ()=> ({
         user_data: [],
+        validation_errors: [],
         token: null,
         process: false,
         successResponse: false,
@@ -38,17 +39,27 @@ export const useAuthStore = defineStore('auth', {
             }
         },
         async register(data){
+            this.validation_errors = []
+            this.process = true
             try {
                 await axiosInstance.post(`/user/register`, data)
                 .then(async (response)=> {
+                    this.process = false
                     console.log(response)
+                    await this.router.push({ name: 'login' }); 
+                    toast.success("Register success. Please proceed to login.");
                 })
                 .catch((error)=> {
+                    this.process = false
                     console.log('axios error:')
                     console.log(error)
+                    if(error.response.data.code == 422){
+                        this.validation_errors = error.response.data.message
+                    }
                 })
 
             } catch (error) {
+                this.process = false
                 console.log("try catch:")
                 console.log(error)
             }
