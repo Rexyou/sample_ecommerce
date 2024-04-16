@@ -66,10 +66,7 @@ export const useAuthStore = defineStore('auth', {
         },
         async updateProfile(data){
             this.process = true
-            try {
-
-                console.log("token :", this.token)
-                
+            try {                
                 await axiosInstance.post(`/user/update_profile`, data, {
                     headers: {
                       'Authorization': `Bearer ${this.token}`
@@ -85,6 +82,7 @@ export const useAuthStore = defineStore('auth', {
                 })
                 .catch(async (error)=> {
                     this.process = false
+                    this.successResponse = false
                     console.log('axios error:')
                     console.log(error)
                     if(error.response.data.code == 401){
@@ -97,6 +95,7 @@ export const useAuthStore = defineStore('auth', {
 
             } catch (error) {
                 this.process = false
+                this.successResponse = false
                 console.log("try catch:")
                 console.log(error)
             }

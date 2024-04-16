@@ -93,15 +93,16 @@
 
 <script setup>
     import { useAuthStore } from '../store/auth';
-    import { reactive, onMounted, computed } from 'vue'
+    import { reactive, onMounted, computed, watch } from 'vue'
     import { storeToRefs } from 'pinia';
+    import { toast } from 'vue3-toastify';
 
     const authStore = useAuthStore()
     authStore.getProfile();
     const { process } = storeToRefs(authStore);
     const user_data_detail = computed(()=> authStore.user_data)
     const current_response_detail = computed(()=> authStore.successResponse)
-    const user_data = user_data_detail.value
+    let user_data = user_data_detail.value
     const current_response = current_response_detail.value
 
     const tab_items = { user_info: 'User Info', orders: 'Orders', favorite: 'Favorites', address: 'Addresses', setting: 'Setting' }
@@ -165,14 +166,27 @@
         }
     }
 
+    // Replace old data
+    watch(user_data_detail, (newData, oldData)=> {
+        user_data = newData
+    })
+
     const updateUserInfo = () => {
+
+        const current_info = Object.entries(user_current_info).reduce((a,[k,v]) => (v == '' || v == null || user_data.profile[k] == v ? a : (a[k]=v, a)), {});
         authStore.successResponse = false
-        authStore.updateProfile(user_current_info)
-        if(current_response){
-            console.log("working")
-            setting.edit_mode = false;
-            setting.edit_wording = "Edit"
+
+        if(Object.values(current_info).length > 0){
+            authStore.updateProfile(current_info)
+            if(current_response){
+                setting.edit_mode = false;
+                setting.edit_wording = "Edit"
+            }
         }
+        else {
+            toast.warning("Nothing to update")
+        }
+
     }
 
     const filterOptions = (value, type) => {
@@ -206,7 +220,6 @@
     }
 
     const logout = () => {
-        console.log("proceed to logout")
         authStore.logout()
     }
 
