@@ -235,7 +235,7 @@
         padding-bottom: 50px;
         display: flex;
         width: 90%;
-        height: 100vh;
+        height: auto;
         margin: 0px auto;
     }
     
@@ -257,6 +257,11 @@
         background: red;
         color: white;
         border-right: 7px solid white;
+        transition: .3s all ease-in-out;
+    }
+
+    .tab_items .title.logout:hover {
+        background: rgb(179, 0, 0);
     }
 
     .tab_items .title:hover {
