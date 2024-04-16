@@ -86,6 +86,10 @@
                     <button class="edit_button" @click="editUserInfo()">{{ setting.edit_wording }}</button>
                     <button class="save_button" v-if="setting.edit_mode" @click="updateUserInfo()" :disabled="process">Save</button>
                 </div>
+                <ProfileOrders v-if="setting.current_tab == 'orders'" />
+                <ProfileFavorites v-if="setting.current_tab == 'favorite'" />
+                <ProfileAddress v-if="setting.current_tab == 'address'" />
+                <ProfileSetting v-if="setting.current_tab == 'setting'" />
             </div>
         </div>
     </div>
@@ -96,6 +100,10 @@
     import { reactive, onMounted, computed, watch } from 'vue'
     import { storeToRefs } from 'pinia';
     import { toast } from 'vue3-toastify';
+    import ProfileOrders from '../components/ProfileOrders.vue';
+    import ProfileFavorites from '../components/ProfileFavorites.vue';
+    import ProfileAddress from '../components/ProfileAddress.vue';
+    import ProfileSetting from '../components/ProfileSetting.vue';
 
     const authStore = useAuthStore()
     authStore.getProfile();
