@@ -87,9 +87,9 @@
     const authStore = useAuthStore()
 
     const { process } = storeToRefs(authStore);
-    const user_data_detail = computed(()=> authStore.user_data)
+    const props = defineProps({ user_data: Object })
     const current_response_detail = computed(()=> authStore.successResponse)
-    let user_data = user_data_detail.value
+    let user_data = props.user_data
     const current_response = current_response_detail.value
 
     const gender_options = { default: { value: '', label: 'Please select gender' }, male: { value: 1, label: 'Male' }, female: { value: 2, label: 'Female' } }
@@ -117,6 +117,10 @@
         edit_wording: 'Edit'
     })
 
+    watch(props, (newProps, oldProps)=>{
+        user_data = newProps.user_data
+    })
+
     const user_current_info = reactive({
         first_name: user_data.profile.first_name,
         last_name: user_data.profile.last_name,
@@ -136,11 +140,6 @@
             setting.edit_wording = "Edit"
         }
     }
-
-    // Replace old data
-    watch(user_data_detail, (newData, oldData)=> {
-        user_data = newData
-    })
 
     const updateUserInfo = () => {
 

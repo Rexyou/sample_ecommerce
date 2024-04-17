@@ -37,7 +37,12 @@ class UserController extends Controller
         return finalResponse($result);
     }
 
-    
+    public function updateUser(Request $request)
+    {
+        $result = $this->userService->updateUser($request);
+        return finalResponse($result);
+    }
+
     public function getProfile(Request $request)
     {
         $result = $this->userService->getProfile($request);

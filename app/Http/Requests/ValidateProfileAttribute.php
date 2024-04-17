@@ -32,8 +32,6 @@ class ValidateProfileAttribute extends FormRequest
             'addresses'=> 'sometimes|array|size:3',
             'addresses.*.remark'=> 'required|string|max:255',
             'addresses.*.address'=> 'required|string|max:255',
-            'preferences'=> 'sometimes|array|min:1',
-            'preferences.remember_me'=> 'sometimes|integer|in:0,1',
             'dob'=> 'sometimes|date',
         ];
     }

@@ -22,10 +22,15 @@ class ValidateUserAttribute extends FormRequest
     public function rules(): array
     {
         return [
-            'username'=> 'required|alpha_num|between:8,12|unique:users,username',
-            'email'=> 'required|email:rfc,dns|max:100|unique:users,email',
-            'phone'=> 'required|between:10,14|regex:/\+[0-9]{10,14}$/|unique:users,phone',
-            'password'=> 'required|string|between:8,16|confirmed',
+            'username'=> 'sometimes|alpha_num|between:8,12|unique:users,username',
+            'email'=> 'sometimes|email:rfc,dns|max:100|unique:users,email',
+            'phone'=> 'sometimes|between:10,14|regex:/\+[0-9]{10,14}$/|unique:users,phone',
+            'current_password'=> 'required_with:password|string|between:8,16',
+            'password'=> 'sometimes|string|between:8,16|confirmed',
+            'preferences'=> 'sometimes|array|min:1',
+            'preferences.remember_me'=> 'sometimes|integer|in:0,1',
+            'preferences.receive_news'=> 'sometimes|integer|in:0,1',
+            'preferences.receive_recommandation'=> 'sometimes|integer|in:0,1',
         ];
     }
 }

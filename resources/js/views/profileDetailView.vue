@@ -10,11 +10,11 @@
                 </div>
             </div>
             <div class="tab_content" v-for="(item, index) in tab_items" :key="index" :class="{ 'active': setting.current_tab == index }" :id="index">
-                <ProfileUserInfo v-if="setting.current_tab == 'user_info'" />
+                <ProfileUserInfo v-if="setting.current_tab == 'user_info'" :user_data="user_data" />
                 <ProfileOrders v-if="setting.current_tab == 'orders'" />
                 <ProfileFavorites v-if="setting.current_tab == 'favorite'" />
                 <ProfileAddress v-if="setting.current_tab == 'address'" />
-                <ProfileSetting v-if="setting.current_tab == 'setting'" />
+                <ProfileSetting v-if="setting.current_tab == 'setting'" :user_data="user_data" />
             </div>
         </div>
     </div>
@@ -33,6 +33,12 @@
     const authStore = useAuthStore()
     authStore.getProfile();
     const { process } = storeToRefs(authStore);
+    const user_data_detail = computed(()=> authStore.user_data)
+    let user_data = user_data_detail.value
+
+    watch(user_data_detail, (newData, oldData)=> {
+        user_data = newData
+    })
 
     const tab_items = { user_info: 'User Info', orders: 'Orders', favorite: 'Favorites', address: 'Addresses', setting: 'Setting' }
 
@@ -69,7 +75,7 @@
         padding-bottom: 50px;
         display: flex;
         width: 90%;
-        height: auto;
+        height: 100vh;
         margin: 0px auto;
     }
     
