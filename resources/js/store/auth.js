@@ -127,6 +127,10 @@ export const useAuthStore = defineStore('auth', {
                         await this.router.push({ name: 'login' }); 
                         toast.error(error.response.data.message);
                     }
+                    else if(error.response.data.code == 422){
+                        this.validation_errors = error.response.data.message
+                        toast.error("Validation errors")
+                    }
                 })
 
             } catch (error) {

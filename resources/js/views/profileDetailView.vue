@@ -32,6 +32,7 @@
 
     const authStore = useAuthStore()
     authStore.getProfile();
+    authStore.validation_errors = []
     const { process } = storeToRefs(authStore);
     const user_data_detail = computed(()=> authStore.user_data)
     let user_data = user_data_detail.value

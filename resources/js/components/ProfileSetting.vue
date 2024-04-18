@@ -3,41 +3,77 @@
         <div class="user_input_field">
             <div class="user_input">
                 <label for="username">Username</label>
-                <input type="text" v-model="user_current_info.username">
+                <input type="text" v-model="form.username">
+                <span v-for="error in v$.username.$errors" :key="error.$uid" class="error_message">
+                    {{ error.$message }}
+                </span>
+                <span v-for="error in validation_errors.username" :key="error.$uid" class="error_message">
+                    {{ error }}
+                </span>
             </div>
             <div class="user_input">
                 <label for="phone">Phone</label>
-                <input type="text" v-model="user_current_info.phone">
+                <input type="text" v-model="form.phone">
+                <span v-for="error in v$.phone.$errors" :key="error.$uid" class="error_message">
+                    {{ error.$message }}
+                </span>
+                <span v-for="error in validation_errors.phone" :key="error.$uid" class="error_message">
+                    {{ error }}
+                </span>
             </div>
             <div class="user_input">
                 <label for="first_name">Email</label>
-                <input type="text" v-model="user_current_info.email">
+                <input type="text" v-model="form.email">
+                <span v-for="error in v$.email.$errors" :key="error.$uid" class="error_message">
+                    {{ error.$message }}
+                </span>
+                <span v-for="error in validation_errors.email" :key="error.$uid" class="error_message">
+                    {{ error }}
+                </span>
             </div>
             <div class="user_input">
                 <label for="current_password">Current Password</label>
-                <input type="text" v-model="user_current_info.current_password">
+                <input type="text" v-model="form.current_password">
+                <span v-for="error in v$.current_password.$errors" :key="error.$uid" class="error_message">
+                    {{ error.$message }}
+                </span>
+                <span v-for="error in validation_errors.current_password" :key="error.$uid" class="error_message">
+                    {{ error }}
+                </span>
             </div>
             <div class="user_input">
                 <label for="password">New Password</label>
-                <input type="text" v-model="user_current_info.password">
+                <input type="text" v-model="form.password">
+                <span v-for="error in v$.password.$errors" :key="error.$uid" class="error_message">
+                    {{ error.$message }}
+                </span>
+                <span v-for="error in validation_errors.password" :key="error.$uid" class="error_message">
+                    {{ error }}
+                </span>
             </div>
             <div class="user_input">
                 <label for="password_confirmation">Password Confirmation</label>
-                <input type="text" v-model="user_current_info.password_confirmation">
+                <input type="text" v-model="form.password_confirmation">
+                <span v-for="error in v$.password.$errors" :key="error.$uid" class="error_message">
+                    {{ error.$message }}
+                </span>
+                <span v-for="error in validation_errors.password" :key="error.$uid" class="error_message">
+                    {{ error }}
+                </span>
             </div>
         </div>
         <div class="user_input_field2">
             <!-- Other setting -->
             <div class="user_input2">
-                <input type="checkbox" id="remember_me" v-model="user_current_info.preferences.remember_me">
+                <input type="checkbox" id="remember_me" v-model="form.preferences.remember_me">
                 <label for="remember_me">"<i>Remember me</i>" setting when login.</label>
             </div>
             <div class="user_input2">
-                <input type="checkbox" id="receive_news" v-model="user_current_info.preferences.receive_news">
+                <input type="checkbox" id="receive_news" v-model="form.preferences.receive_news">
                 <label for="receive_news">Received latest news and promotion.</label>
             </div>
             <div class="user_input2">
-                <input type="checkbox" id="receive_recommandation" v-model="user_current_info.preferences.receive_recommandation">
+                <input type="checkbox" id="receive_recommandation" v-model="form.preferences.receive_recommandation">
                 <label for="receive_recommandation">Received order related recommandation.</label>
             </div>
         </div>
@@ -49,22 +85,24 @@
     import { useAuthStore } from '../store/auth';
     import { reactive, computed, watch } from 'vue';
     import { storeToRefs } from 'pinia';
-    import { toast } from 'vue3-toastify'
+    import { toast } from 'vue3-toastify';
+
+    import { useVuelidate } from '@vuelidate/core';
+    import { required, email, helpers, minLength, maxLength, sameAs } from "@vuelidate/validators";
 
     const authStore = useAuthStore()
     const props = defineProps({ user_data: Object })
     let user_data = props.user_data
-    const { process } = storeToRefs(authStore)
+    const { process, validation_errors } = storeToRefs(authStore)
 
     const current_response_detail = computed(()=> authStore.successResponse)
     const current_response = current_response_detail.value
 
     watch(props, (newProps, oldProps)=> {
         user_data = newProps.user_data
-        console.log("watch user_data: ", user_data.profile.preferences)
     })
 
-    const user_current_info = reactive({
+    const form = reactive({
         username: user_data.username,
         phone: user_data.phone,
         email: user_data.email,
@@ -78,37 +116,66 @@
         }
     })
 
-    const updateUserInfo = () => {
+    const username_format = helpers.regex(/^[\w\d]{8,12}$/)
+    const phone_format = helpers.regex(/\+[0-9]{10,14}$/)
 
-        const current_info = Object.entries(user_current_info).reduce((a,[k,v]) => {
-             if (v !== null && v !== "" && user_data[k] !== v) {
-                a[k] = v;
-            }
-            return a;
-        }, {});
+    const rules = computed(()=> {
+        return {
+            username: { 
+                     
+                        username_format: helpers.withMessage("Username format invalid!", username_format),
+                        minLength: minLength(8), maxLength: maxLength(12)
+                    },
+            email: { email, maxLength: maxLength(100) },
+            phone: { 
+                    
+                        phone_format: helpers.withMessage("Phone format invalid!", phone_format), 
+                        minLength: minLength(10), maxLength: maxLength(14)
+                    },
+            current_password: { minLength: minLength(8), maxLength: maxLength(16) },
+            password: { minLength: minLength(8), maxLength: maxLength(16) },
+            password_confirmation: { 
+                                    minLength: minLength(8), maxLength: maxLength(16),
+                                    sameAs: sameAs(form.password) },
+        } 
+    })
 
-        let count = 0
-        Object.keys(current_info.preferences).forEach((item)=> {
-            if(current_info.preferences[item] == user_data.profile.preferences[item]){
-                count++
-            }
-        })
+    const v$ = useVuelidate(rules, form);
 
-        if(count == Object.keys(current_info.preferences).length){
-            delete current_info.preferences
-        }
-        
-        if(Object.values(current_info).length > 0){
-            console.log("current_data: ", current_info)
-            authStore.updateUser(current_info)
-            if(current_response){
-                user_current_info.current_password = ""
-                user_current_info.password = ""
-                user_current_info.password_confirmation = ""
+    const updateUserInfo = async () => {
+
+        const result = await v$.value.$validate();
+        if(result){
+            const current_info = Object.entries(form).reduce((a,[k,v]) => {
+                if (v !== null && v !== "" && user_data[k] !== v) {
+                    a[k] = v;
+                }
+                return a;
+            }, {});
+
+            let count = 0
+            Object.keys(current_info.preferences).forEach((item)=> {
+                if(current_info.preferences[item] == user_data.profile.preferences[item]){
+                    count++
+                }
+            })
+
+            if(count == Object.keys(current_info.preferences).length){
+                delete current_info.preferences
             }
-        }
-        else {
-            toast.warning("Nothing to update")
+            
+            if(Object.values(current_info).length > 0){
+                authStore.updateUser(current_info)
+                if(current_response){
+                    form.current_password = ""
+                    form.password = ""
+                    form.password_confirmation = ""
+                }
+            }
+            else {
+                toast.warning("Nothing to update")
+                authStore.validation_errors = []
+            }
         }
 
     }
@@ -147,6 +214,12 @@
         margin: 10px 0px;
         font-size: 16px;
         width: 300px;
+    }
+
+    .user_input .error_message {
+        color: red;
+        font-size: 16px;
+        margin: 10px 0px 0px;
     }
 
     .user_input2 {
