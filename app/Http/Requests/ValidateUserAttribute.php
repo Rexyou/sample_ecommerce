@@ -28,9 +28,9 @@ class ValidateUserAttribute extends FormRequest
             'current_password'=> 'required_with:password|string|between:8,16',
             'password'=> 'sometimes|string|between:8,16|confirmed',
             'preferences'=> 'sometimes|array|min:1',
-            'preferences.remember_me'=> 'sometimes|integer|in:0,1',
-            'preferences.receive_news'=> 'sometimes|integer|in:0,1',
-            'preferences.receive_recommandation'=> 'sometimes|integer|in:0,1',
+            'preferences.remember_me'=> "sometimes|boolean",
+            'preferences.receive_news'=> 'sometimes|boolean',
+            'preferences.receive_recommandation'=> 'sometimes|boolean',
         ];
     }
 }

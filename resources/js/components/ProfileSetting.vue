@@ -61,6 +61,7 @@
 
     watch(props, (newProps, oldProps)=> {
         user_data = newProps.user_data
+        console.log("watch user_data: ", user_data.profile.preferences)
     })
 
     const user_current_info = reactive({
@@ -71,15 +72,31 @@
         password: "",
         password_confirmation: "",
         preferences: {
-            remember_me: user_data.profile.preferences?.remember_me ? user_data.profile.preferences.remember_me : true,
-            receive_news: user_data.profile.preferences?.receive_news ? user_data.profile.preferences.receive_news : true,
-            receive_recommandation: user_data.profile.preferences?.receive_recommandation ? user_data.profile.preferences.receive_recommandation : true,
+            remember_me: user_data.profile.preferences?.remember_me == true ? true : false,
+            receive_news: user_data.profile.preferences?.receive_news == true ? true : false,
+            receive_recommandation: user_data.profile.preferences?.receive_recommandation == true ? true : false,
         }
     })
 
     const updateUserInfo = () => {
 
-        const current_info = Object.entries(user_current_info).reduce((a,[k,v]) => (v == '' || v == null || user_data[k] == v || user_data.profile[k] ? a : (a[k]=v, a)), {})
+        const current_info = Object.entries(user_current_info).reduce((a,[k,v]) => {
+             if (v !== null && v !== "" && user_data[k] !== v) {
+                a[k] = v;
+            }
+            return a;
+        }, {});
+
+        let count = 0
+        Object.keys(current_info.preferences).forEach((item)=> {
+            if(current_info.preferences[item] == user_data.profile.preferences[item]){
+                count++
+            }
+        })
+
+        if(count == Object.keys(current_info.preferences).length){
+            delete current_info.preferences
+        }
         
         if(Object.values(current_info).length > 0){
             console.log("current_data: ", current_info)
@@ -143,7 +160,7 @@
 
     .user_input2 label {
         margin-right: 10px;
-        font-size: 20px;
+        font-size: 18px;
         font-weight: 700;
     }
 

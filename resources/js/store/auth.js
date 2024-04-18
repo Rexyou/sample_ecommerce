@@ -113,6 +113,7 @@ export const useAuthStore = defineStore('auth', {
                     console.log("update user: ")
                     console.log(response.data)
                     toast.success("Update setting success");
+                    this.user_data = response.data.data
                     this.successResponse = true
                 })
                 .catch(async (error)=> {
