@@ -136,12 +136,6 @@
         form.line_3 = ""
     }
 
-    watch(openModal, (newData, oldData)=> {
-        console.log("open modal new: ", newData)
-        console.log("open modal old: ", oldData)
-        // openModal = newData
-    })
-
     const props = defineProps({ user_data: Object })
     let user_data = props.user_data
 
@@ -153,7 +147,6 @@
         current_response = newResponse
     })
 
-    console.log(user_data.profile.addresses)
     let current_addresses_list = user_data.profile.addresses
     let current_addresses = []
 
@@ -196,9 +189,6 @@
         const result = await v$.value.$validate();
         if(result){
 
-            console.log(current_addresses_list)
-            console.log(form)
-
             if(current_addresses_list.length == 3){
                 openModal = false
                 return toast.error("Addresses reached limit.")
@@ -206,8 +196,6 @@
 
             const checker = current_addresses_list.find((value, key)=> {
                 if(value.label === form.label || value.label === form.label.toLowerCase()){
-                    console.log("label: ", value.label)
-                    console.log("form: ", form.label)
                     return true
                 }
             })
@@ -217,7 +205,6 @@
             }
 
             current_addresses_list.push(form)
-            console.log(current_addresses_list)
             authStore.updateProfile({ addresses: current_addresses_list })
 
             if(current_response){
