@@ -13,7 +13,7 @@
                 <ProfileUserInfo v-if="setting.current_tab == 'user_info'" :user_data="user_data" />
                 <ProfileOrders v-if="setting.current_tab == 'orders'" />
                 <ProfileFavorites v-if="setting.current_tab == 'favorite'" />
-                <ProfileAddress v-if="setting.current_tab == 'address'" />
+                <ProfileAddress v-if="setting.current_tab == 'address'" :user_data="user_data" />
                 <ProfileSetting v-if="setting.current_tab == 'setting'" :user_data="user_data" />
             </div>
         </div>
@@ -95,14 +95,14 @@
     }
 
     .tab_items .title.logout {
-        background: red;
+        background: #e80202;
         color: white;
         border-right: 7px solid white;
         transition: .3s all ease-in-out;
     }
 
     .tab_items .title.logout:hover {
-        background: rgb(179, 0, 0);
+        background: #be0101;
     }
 
     .tab_items .title:hover {

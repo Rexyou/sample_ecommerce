@@ -8,13 +8,13 @@ import "@egjs/vue3-flicking/dist/flicking.css";
 import "@egjs/vue3-flicking/dist/flicking-inline.css";
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 import { OhVueIcon, addIcons } from "oh-vue-icons";
-import { BiSearch, BiPeopleFill, BiCart, BiBookmark, HiMinusCircle, HiPlusCircle, BiArrowLeftSquare, BiEyeFill, BiEyeSlashFill } from "oh-vue-icons/icons";
+import { BiSearch, BiPeopleFill, BiCart, BiBookmark, HiMinusCircle, HiPlusCircle, BiArrowLeftSquare, BiEyeFill, BiEyeSlashFill, MdModeeditoutline, MdDeleteforever } from "oh-vue-icons/icons";
 import VueAwesomePaginate from "vue-awesome-paginate";
 import "vue-awesome-paginate/dist/style.css";
 import Vue3Toasity from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 
-addIcons(BiSearch, BiPeopleFill, BiCart, BiBookmark, HiMinusCircle, HiPlusCircle, BiArrowLeftSquare, BiEyeFill, BiEyeSlashFill);
+addIcons(BiSearch, BiPeopleFill, BiCart, BiBookmark, HiMinusCircle, HiPlusCircle, BiArrowLeftSquare, BiEyeFill, BiEyeSlashFill, MdModeeditoutline, MdDeleteforever);
 
 const app = createApp(App)
 const pinia = createPinia()

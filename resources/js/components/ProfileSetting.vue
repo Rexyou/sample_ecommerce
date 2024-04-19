@@ -54,10 +54,10 @@
             <div class="user_input">
                 <label for="password_confirmation">Password Confirmation</label>
                 <input type="text" v-model="form.password_confirmation">
-                <span v-for="error in v$.password.$errors" :key="error.$uid" class="error_message">
+                <span v-for="error in v$.password_confirmation.$errors" :key="error.$uid" class="error_message">
                     {{ error.$message }}
                 </span>
-                <span v-for="error in validation_errors.password" :key="error.$uid" class="error_message">
+                <span v-for="error in validation_errors.password_confirmation" :key="error.$uid" class="error_message">
                     {{ error }}
                 </span>
             </div>
