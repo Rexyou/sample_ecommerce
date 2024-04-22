@@ -34,7 +34,7 @@
                         </div>
                     </div>
                     <div class="button_action">
-                        <button class="button_add_to_cart" id="button_add_to_cart">
+                        <button class="button_add_to_cart" id="button_add_to_cart" @click.prevent="addToCart">
                             <v-icon name="bi-cart"/>
                             <span>Add to Cart</span>
                         </button>
@@ -53,20 +53,27 @@
 </template>
 
 <script setup>
-    import { reactive, watch, onActivated } from 'vue'
+    import { reactive, watch, onActivated, computed } from 'vue'
     import { storeToRefs } from 'pinia';
     import { useRoute } from 'vue-router'
     import { useCommonStore } from '../store/general';
     import productSlider from '../components/ProductSlider.vue'
     import { isEqual } from 'lodash'
+    import { useAuthStore } from '../store/auth';
+    import { toast } from 'vue3-toastify';
 
     const route = useRoute()
     const params = route.params;
     const product_id = params.product_id;
 
     const commonStore = useCommonStore()
+    const authStore = useAuthStore()
     commonStore.getProduct(product_id)
     const { product_detail } = storeToRefs(commonStore)
+    const token_details = computed(()=> authStore.token)
+    const token = token_details.value
+
+    watch(token_details, (newToken, oldToken)=> { token = newToken.value })
 
     const form = reactive({
         product_id: 0,
@@ -140,9 +147,14 @@
 
     }
 
-    watch(form, (newForm, oldForm)=> {
-        console.log("current form: ", newForm)
-    })
+    const addToCart = () => {
+        if(token == null){
+            toast.warning("Please login to continue.")
+        }
+
+        console.log("current token: ", token)
+        console.log("current form: ", form)
+    }
 
 </script>
 
