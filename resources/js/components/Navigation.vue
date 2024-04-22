@@ -71,6 +71,10 @@
             setting.show_navbar= true
             setting.show_home = false
         }
+
+        if(to.name == 'profile'){
+            authStore.getProfile()
+        }
     })
 
 </script>

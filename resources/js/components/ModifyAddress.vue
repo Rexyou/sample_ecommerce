@@ -92,19 +92,23 @@
 
     const authStore = useAuthStore()
     const { validation_errors, process } = storeToRefs(authStore)
+    const current_response_detail = computed(()=> authStore.successResponse)
+    let current_response = current_response_detail.value
+
+    watch(current_response_detail, (newResponse, oldResponse)=> {
+        current_response = newResponse
+    })
 
     const props = defineProps({ 
                     openModal: Boolean, 
                     mode: String, 
                     user_data: Object, 
-                    currentIndex: Object, 
-                    current_response: Boolean 
+                    currentIndex: Object
                 })
     let openModal = props.openModal
     let user_data = props.user_data
     let current_mode = props.mode
     let currentIndex = props.currentIndex
-    let current_response = props.current_response
 
     let current_addresses_list = user_data.profile.addresses
     let current_addresses = []
@@ -114,11 +118,9 @@
         user_data = newProps.user_data
         current_mode = newProps.mode
         currentIndex = newProps.currentIndex
-        current_response = newProps.current_response
         current_addresses_list = user_data.profile.addresses
 
         if(currentIndex !== "" && Number.isInteger(currentIndex)){
-            console.log("gg")
             form.label = current_addresses_list[currentIndex].label
             form.receiver_name = current_addresses_list[currentIndex].receiver_name
             form.phone = current_addresses_list[currentIndex].phone
@@ -128,7 +130,7 @@
             form.main_tag = current_addresses_list[currentIndex].main_tag
         }
 
-        if(current_mode == "create"){
+        if(current_mode == "create" && current_response){
             clearForm()
         }
     })
@@ -206,12 +208,8 @@
                 return toast.error("Addresses reached limit.")
             }
 
-            console.log(current_addresses_list)
-
             const checker = current_addresses_list.find((value, key)=> {
                 if(value.label === form.label || value.label === form.label.toLowerCase()){
-                    console.log("current value: ", value.label)
-                    console.log("current form value: ", form.label)
                     return true
                 }
             })
@@ -226,6 +224,9 @@
             if(current_response){
                 emit('showModal', current_mode)
                 clearForm()
+            }
+            else {
+                current_addresses_list.pop()
             }
         }
     }

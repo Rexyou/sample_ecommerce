@@ -91,6 +91,9 @@ export const useAuthStore = defineStore('auth', {
                         await this.router.push({ name: 'login' }); 
                         toast.error(error.response.data.message);
                     }
+                    else {
+                        toast.error(error.response.data.message);
+                    }
                 })
 
             } catch (error) {

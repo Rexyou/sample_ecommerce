@@ -65,6 +65,25 @@ class UserService{
         $filter_list = $validator->validated();
         $profile = Auth::user()->profile;
 
+        if(isset($filter_list['addresses']) && count($filter_list['addresses']) == 3){
+
+            $main_count = 0;
+            foreach($filter_list['addresses'] as $address){
+                if($address['main_tag'] == true){
+                    $main_count++;
+                }
+            }
+
+            if($main_count == 0){
+                return errorResponse("", "main_tag_need_at_least_one", Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
+
+            if($main_count > 1){
+                return errorResponse("", "main_tag_exceed_limit", Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
+
+        }
+
         $result = $this->profile->updateProfile($filter_list, $profile);
         if($result['status']){
             return $this->getProfile($request);

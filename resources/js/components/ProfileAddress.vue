@@ -20,7 +20,7 @@
             <v-icon name="hi-plus-circle" @click="changeModalShow('create')" />
         </div>
     </div>
-    <ModifyAddress :openModal="openModal" :mode="currentMode" :currentIndex="currentIndex" :user_data="user_data" :current_response="current_response" @showModal="changeModalShow"  />
+    <ModifyAddress :openModal="openModal" :mode="currentMode" :currentIndex="currentIndex" :user_data="user_data" @showModal="changeModalShow"  />
 </template>
 
 <script setup>
@@ -37,8 +37,6 @@
 
     const authStore = useAuthStore()
     const { validation_errors, process } = storeToRefs(authStore)
-    const current_response_detail = computed(()=> authStore.successResponse)
-    let current_response = current_response_detail.value
 
     let openModal = ref(false)
     let currentMode = ref("create")
@@ -51,10 +49,6 @@
     watch(props, (newProps, oldProps)=> {
         user_data = newProps.user_data
         current_addresses_list = user_data.profile.addresses
-    })
-
-    watch(current_response_detail, (newResponse, oldResponse)=> {
-        current_response = newResponse
     })
 
     const changeModalShow = (mode, index) => {
