@@ -101,7 +101,7 @@
 
 <script setup>
 
-    import { watch, ref, reactive, computed } from 'vue'
+    import { watch, ref, reactive, computed, nextTick } from 'vue'
     import { useAuthStore } from '../store/auth';
 
     import { useVuelidate } from '@vuelidate/core';
@@ -209,6 +209,10 @@
 
             if(current_response){
                 openModal.value = false
+
+                // Clear form, need to import next tick
+                await nextTick()
+                v$.value.$reset()
             }
         }
     }
