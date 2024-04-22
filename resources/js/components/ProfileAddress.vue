@@ -1,8 +1,8 @@
 <template>
     <div class="address_data">
-        <div class="address_card" v-for="(address, index) in user_data.profile.addresses" :key="index" 
+        <div class="address_card" v-for="(address, index) in current_addresses_list" :key="index" 
             :class="{ 'main_card': address.main_tag, 'sub_card': !address.main_tag }">
-            <span class="label">{{ address.label }}</span>
+            <span class="label">{{ address['label'] }}</span>
             <div class="personal_details">
                 <span class="receiver_name">Receiver Name : {{ address.receiver_name }}</span>
                 <span class="phone_number">Phone Number : {{ address.phone }}</span>
@@ -37,18 +37,22 @@
 
     const authStore = useAuthStore()
     const { validation_errors, process } = storeToRefs(authStore)
+    const user_data_details = computed(()=> authStore.user_data);
+    let user_data = user_data_details.value
 
     let openModal = ref(false)
     let currentMode = ref("create")
     let currentIndex = ref("")
 
     const props = defineProps({ user_data: Object })
-    let user_data = props.user_data
+    // let user_data = props.user_data
     let current_addresses_list = user_data.profile.addresses
 
-    watch(props, (newProps, oldProps)=> {
-        user_data = newProps.user_data
+    watch(user_data_details, (newData, oldData)=> {
+        user_data = newData
+        console.log("address_user_data: ", user_data.profile.addresses)
         current_addresses_list = user_data.profile.addresses
+        console.log("current user list: ", current_addresses_list)
     })
 
     const changeModalShow = (mode, index) => {

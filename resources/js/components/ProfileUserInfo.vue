@@ -87,9 +87,9 @@
     const authStore = useAuthStore()
 
     const { process } = storeToRefs(authStore);
-    const props = defineProps({ user_data: Object })
     const current_response_detail = computed(()=> authStore.successResponse)
-    let user_data = props.user_data
+    let user_data_details = computed(()=> authStore.user_data)
+    let user_data = user_data_details.value
     const current_response = current_response_detail.value
 
     const gender_options = { default: { value: '', label: 'Please select gender' }, male: { value: 1, label: 'Male' }, female: { value: 2, label: 'Female' } }
@@ -115,10 +115,6 @@
         current_tab: 'user_info',
         edit_mode: false,
         edit_wording: 'Edit'
-    })
-
-    watch(props, (newProps, oldProps)=>{
-        user_data = newProps.user_data
     })
 
     const user_current_info = reactive({

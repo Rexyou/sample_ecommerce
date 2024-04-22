@@ -218,6 +218,7 @@
                 return toast.error("Label exists")
             }
 
+            console.log("form: ", form)
             current_addresses_list.push(form)
             authStore.updateProfile({ addresses: current_addresses_list })
 

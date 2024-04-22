@@ -187,7 +187,7 @@ export const useAuthStore = defineStore('auth', {
                     console.log(response.data)
                     this.user_data = []
                     this.token = null
-                    await this.router.push({ name: 'login' }); 
+                    await this.router.push({ name: 'login' });
                     toast.success("Logout success");
                 })
                 .catch(async (error)=> {

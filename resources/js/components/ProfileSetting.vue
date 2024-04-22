@@ -91,16 +91,13 @@
     import { required, email, helpers, minLength, maxLength, sameAs } from "@vuelidate/validators";
 
     const authStore = useAuthStore()
-    const props = defineProps({ user_data: Object })
-    let user_data = props.user_data
     const { process, validation_errors } = storeToRefs(authStore)
+
+    let user_data_details = computed(()=> authStore.user_data)
+    let user_data = user_data_details.value
 
     const current_response_detail = computed(()=> authStore.successResponse)
     const current_response = current_response_detail.value
-
-    watch(props, (newProps, oldProps)=> {
-        user_data = newProps.user_data
-    })
 
     const form = reactive({
         username: user_data.username,
