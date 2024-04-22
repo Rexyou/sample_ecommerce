@@ -155,7 +155,7 @@
 
             let count = 0
             Object.keys(current_info.preferences).forEach((item)=> {
-                if(current_info.preferences[item] == user_data.profile.preferences[item]){
+                if(user_data.profile.preferences != null && current_info.preferences[item] == user_data.profile.preferences[item]){
                     count++
                 }
             })
@@ -185,7 +185,6 @@
     .user_info_data {
         width: 100%;
         height: 100%;
-        overflow-y: scroll;
     }
 
     .user_input_field {
