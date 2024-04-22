@@ -106,12 +106,16 @@
     let currentIndex = props.currentIndex
     let current_response = props.current_response
 
+    let current_addresses_list = user_data.profile.addresses
+    let current_addresses = []
+
     watch(props, (newProps, oldProps)=> {
         openModal = newProps.openModal
         user_data = newProps.user_data
         current_mode = newProps.mode
         currentIndex = newProps.currentIndex
         current_response = newProps.current_response
+        current_addresses_list = user_data.profile.addresses
 
         if(currentIndex !== "" && Number.isInteger(currentIndex)){
             console.log("gg")
@@ -157,9 +161,6 @@
         emit('showModal', current_mode)
         clearForm()
     }
-
-    let current_addresses_list = user_data.profile.addresses
-    let current_addresses = []
 
     if(current_addresses_list == null || current_addresses_list.length == 0){
         form.main_tag = true

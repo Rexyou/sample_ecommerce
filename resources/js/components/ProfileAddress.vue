@@ -15,7 +15,7 @@
                 <v-icon name="md-deleteforever" @click="deleteAddress(index)" />
             </div>
         </div>
-        <div class="address_card plus_action">
+        <div class="address_card plus_action" v-if="current_addresses_list.length < 3">
             <h1>Add Address</h1>
             <v-icon name="hi-plus-circle" @click="changeModalShow('create')" />
         </div>
@@ -46,9 +46,11 @@
 
     const props = defineProps({ user_data: Object })
     let user_data = props.user_data
+    let current_addresses_list = user_data.profile.addresses
 
     watch(props, (newProps, oldProps)=> {
         user_data = newProps.user_data
+        current_addresses_list = user_data.profile.addresses
     })
 
     watch(current_response_detail, (newResponse, oldResponse)=> {
@@ -65,7 +67,6 @@
     }
 
     const deleteAddress = (index) => {
-        let current_addresses_list = user_data.profile.addresses
         if(confirm("Are your sure delete this address `"+current_addresses_list[index]['label']+'`?')){
             if(index > -1){
                 current_addresses_list.splice(index, 1)
