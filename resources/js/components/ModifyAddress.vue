@@ -82,7 +82,7 @@
 
 <script setup>
 
-    import { watch, ref, reactive, computed, nextTick } from 'vue'
+    import { watch, ref, reactive, computed, nextTick, onMounted } from 'vue'
     import { useAuthStore } from '../store/auth';
 
     import { useVuelidate } from '@vuelidate/core';
@@ -95,6 +95,13 @@
     const current_response_detail = computed(()=> authStore.successResponse)
     let current_response = current_response_detail.value
 
+    const user_data_details = computed(()=> authStore.user_data)
+    let user_data = user_data_details.value
+
+    watch(user_data_details, (newData, oldData)=> {
+        user_data = newData
+    })
+
     watch(current_response_detail, (newResponse, oldResponse)=> {
         current_response = newResponse
     })
@@ -106,7 +113,6 @@
                     currentIndex: Object
                 })
     let openModal = props.openModal
-    let user_data = props.user_data
     let current_mode = props.mode
     let currentIndex = props.currentIndex
 
@@ -115,7 +121,6 @@
 
     watch(props, (newProps, oldProps)=> {
         openModal = newProps.openModal
-        user_data = newProps.user_data
         current_mode = newProps.mode
         currentIndex = newProps.currentIndex
         current_addresses_list = user_data.profile.addresses
@@ -130,9 +135,10 @@
             form.main_tag = current_addresses_list[currentIndex].main_tag
         }
 
-        if(current_mode == "create" && current_response){
+        if(openModal == true && current_mode == "create"){
             clearForm()
         }
+
     })
 
     const form = reactive({
@@ -203,7 +209,7 @@
         const result = await v$.value.$validate();
         if(result){
 
-            if(current_addresses_list.length == 3){
+            if(current_addresses_list != null && current_addresses_list.length == 3){
                 openModal = false
                 return toast.error("Addresses reached limit.")
             }
@@ -218,13 +224,11 @@
                 return toast.error("Label exists")
             }
 
-            console.log("form: ", form)
             current_addresses_list.push(form)
-            authStore.updateProfile({ addresses: current_addresses_list })
+            await authStore.updateProfile({ addresses: current_addresses_list })
 
             if(current_response){
                 emit('showModal', current_mode)
-                clearForm()
             }
             else {
                 current_addresses_list.pop()
@@ -236,8 +240,7 @@
         current_addresses_list[index] = form
         authStore.updateProfile({ addresses: current_addresses_list })
         if(current_response){
-            emit('showModal', current_mode)
-            clearForm()
+            modalControl()
         }
     }
 

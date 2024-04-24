@@ -1,26 +1,28 @@
 <template>
-    <div class="address_data">
-        <div class="address_card" v-for="(address, index) in current_addresses_list" :key="index" 
-            :class="{ 'main_card': address.main_tag, 'sub_card': !address.main_tag }">
-            <span class="label">{{ address['label'] }}</span>
-            <div class="personal_details">
-                <span class="receiver_name">Receiver Name : {{ address.receiver_name }}</span>
-                <span class="phone_number">Phone Number : {{ address.phone }}</span>
-            </div>
-            <span class="line_1">{{ address.line_1 }}</span>
-            <span class="line_2">{{ address.line_2 }}</span>
-            <span class="line_3">{{ address.line_3 }}</span>
-            <div class="tools">
-                <v-icon name="md-modeeditoutline" @click="changeModalShow('edit', index)" />
-                <v-icon name="md-deleteforever" @click="deleteAddress(index)" />
+    <div class="address_container">
+        <div v-if="user_data.profile?.addresses" class="address_data">
+            <div class="address_card" v-for="(address, index) in user_data.profile.addresses" :key="index" 
+                :class="{ 'main_card': address.main_tag, 'sub_card': !address.main_tag }">
+                <span class="label">{{ address['label'] }}</span>
+                <div class="personal_details">
+                    <span class="receiver_name">Receiver Name : {{ address.receiver_name }}</span>
+                    <span class="phone_number">Phone Number : {{ address.phone }}</span>
+                </div>
+                <span class="line_1">{{ address.line_1 }}</span>
+                <span class="line_2">{{ address.line_2 }}</span>
+                <span class="line_3">{{ address.line_3 }}</span>
+                <div class="tools">
+                    <v-icon name="md-modeeditoutline" @click="changeModalShow('edit', index)" />
+                    <v-icon name="md-deleteforever" @click="deleteAddress(index)" />
+                </div>
             </div>
         </div>
-        <div class="address_card plus_action" v-if="current_addresses_list.length < 3">
+        <div class="address_card plus_action" v-if="user_data.profile?.addresses == null || user_data.profile.addresses.length < 3">
             <h1>Add Address</h1>
             <v-icon name="hi-plus-circle" @click="changeModalShow('create')" />
         </div>
     </div>
-    <ModifyAddress :openModal="openModal" :mode="currentMode" :currentIndex="currentIndex" :user_data="user_data" @showModal="changeModalShow"  />
+    <ModifyAddress :openModal="openModal" :mode="currentMode" :currentIndex="currentIndex" @showModal="changeModalShow"  />
 </template>
 
 <script setup>
@@ -36,24 +38,21 @@
     import ModifyAddress from './ModifyAddress.vue'
 
     const authStore = useAuthStore()
-    const { validation_errors, process } = storeToRefs(authStore)
+    const { validation_errors, process, user_data } = storeToRefs(authStore)
     const user_data_details = computed(()=> authStore.user_data);
-    let user_data = user_data_details.value
+    let current_user_data = user_data_details.value
+    let current_addresses_list = current_user_data.profile.addresses
+
+    watch(user_data_details, (newData)=> {
+        current_user_data = newData
+        if(current_user_data.length !== 0){
+            current_addresses_list = current_user_data.profile.addresses
+        }
+    })
 
     let openModal = ref(false)
     let currentMode = ref("create")
     let currentIndex = ref("")
-
-    const props = defineProps({ user_data: Object })
-    // let user_data = props.user_data
-    let current_addresses_list = user_data.profile.addresses
-
-    watch(user_data_details, (newData, oldData)=> {
-        user_data = newData
-        console.log("address_user_data: ", user_data.profile.addresses)
-        current_addresses_list = user_data.profile.addresses
-        console.log("current user list: ", current_addresses_list)
-    })
 
     const changeModalShow = (mode, index) => {
         currentMode.value = mode
@@ -65,9 +64,12 @@
     }
 
     const deleteAddress = (index) => {
+        console.log("list: ", current_addresses_list)
+        console.log("selected: ", current_addresses_list[index])
         if(confirm("Are your sure delete this address `"+current_addresses_list[index]['label']+'`?')){
             if(index > -1){
                 current_addresses_list.splice(index, 1)
+                console.log("after delete list: ", current_addresses_list)
                 authStore.updateProfile({ addresses: current_addresses_list })
             }
         }
@@ -83,6 +85,7 @@
         grid-template-columns: auto auto;
         column-gap: 20px;
         row-gap: 20px;
+        margin-bottom: 20px;
     }
 
     .address_card {

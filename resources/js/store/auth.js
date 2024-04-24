@@ -66,6 +66,7 @@ export const useAuthStore = defineStore('auth', {
         },
         async updateProfile(data){
             this.process = true
+            this.successResponse = false
             try {                
                 await axiosInstance.post(`/user/update_profile`, data, {
                     headers: {
@@ -74,11 +75,11 @@ export const useAuthStore = defineStore('auth', {
                 })
                 .then(async (response)=> {
                     this.process = false
+                    this.successResponse = true
+                    this.user_data = response.data.data
                     console.log("update profile: ")
                     console.log(response.data.data)
-                    this.user_data = response.data.data
                     toast.success("Update profile success");
-                    this.successResponse = true
                 })
                 .catch(async (error)=> {
                     this.process = false
@@ -92,6 +93,7 @@ export const useAuthStore = defineStore('auth', {
                         toast.error(error.response.data.message);
                     }
                     else {
+                        this.getProfile()
                         toast.error(error.response.data.message);
                     }
                 })

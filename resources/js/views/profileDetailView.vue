@@ -13,7 +13,7 @@
                 <ProfileUserInfo v-if="setting.current_tab == 'user_info'" :user_data="user_data" />
                 <ProfileOrders v-if="setting.current_tab == 'orders'" />
                 <ProfileFavorites v-if="setting.current_tab == 'favorite'" />
-                <ProfileAddress v-if="setting.current_tab == 'address'" :user_data="user_data" />
+                <ProfileAddress v-if="setting.current_tab == 'address'" />
                 <ProfileSetting v-if="setting.current_tab == 'setting'" />
             </div>
         </div>
