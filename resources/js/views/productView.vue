@@ -164,7 +164,6 @@
             toast.warning("Please login to continue.")
         }
 
-        console.log("current token: ", token)
         console.log("current form: ", form)
     }
 
