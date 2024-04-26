@@ -150,6 +150,7 @@ class Product extends Model
         }
 
         $data = $data->filterProductOptions();
+        $data = $data->getProductPrice();
 
         foreach($data->product_option_details as $option_detail)
         {
