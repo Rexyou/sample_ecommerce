@@ -17,4 +17,10 @@ class CartController extends Controller
         $result = $this->cartService->AddCart($request);
         return finalResponse($result);
     }
+
+    public function getCartList(Request $request)
+    {
+        $result = $this->cartService->getCartList($request);
+        return finalResponse($result);
+    }
 }

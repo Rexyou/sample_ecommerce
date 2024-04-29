@@ -78,14 +78,12 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to, from)=> {
-  console.log("from route: ", from)
-  console.log("to route: ", to)
   const commonStore = useCommonStore()
   const authStore = useAuthStore();
   const authUserData = authStore.user_data;
   const token = authStore.token;
 
-  const blackFontPage = [ 'product', 'product_list', 'login', 'profile' ];
+  const blackFontPage = [ 'product', 'product_list', 'login', 'profile', 'cart' ];
   const authPage = [ 'profile', 'cart' ];
   const guestPage = [ 'login', 'register' ];
   

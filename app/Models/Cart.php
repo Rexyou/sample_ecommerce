@@ -18,30 +18,7 @@ class Cart extends Model
     protected $guarded = [];
     protected $table = "cart";
 
-    public function createCart($request)
-    {
-        
-        DB::beginTransaction();
-
-        try {
-
-            $creation = $this->create($request);
-            if(!$creation){
-                return errorResponse("", "creation_cart_failure", Response::HTTP_INTERNAL_SERVER_ERROR);
-            }
-            
-            DB::commit();
-            return successResponse();
-
-        } catch (\Exception $e) {
-
-            DB::rollback();
-            return errorMessageHandler($e);
-
-        }
-    }
-
-    public function checkProdutExist($request)
+    public function checkProductExist($request)
     {
 
         $product_exist = Product::where([ 'id'=> $request['product_id'], 'status'=> Product::STATUS_ACTIVE ])->exists();
@@ -55,5 +32,10 @@ class Cart extends Model
         }
 
         return successResponse();
+    }
+
+    public function product()
+    {
+        return $this->hasOne(Product::class, 'id', 'product_id');
     }
 }

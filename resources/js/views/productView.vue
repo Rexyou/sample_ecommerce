@@ -36,7 +36,7 @@
                         </div>
                     </div>
                     <div class="button_action">
-                        <button class="button_add_to_cart" id="button_add_to_cart" @click.prevent="addToCart">
+                        <button class="button_add_to_cart" id="button_add_to_cart" @click.prevent="addToCart" :disabled="process">
                             <v-icon name="bi-cart"/>
                             <span>Add to Cart</span>
                         </button>
@@ -61,6 +61,7 @@
     import productSlider from '../components/ProductSlider.vue'
     import { isEqual } from 'lodash'
     import { useAuthStore } from '../store/auth';
+    import { useCartStore } from '../store/cart';
     import { toast } from 'vue3-toastify';
 
     const route = useRoute()
@@ -69,17 +70,22 @@
 
     const commonStore = useCommonStore()
     const authStore = useAuthStore()
+    const cartStore = useCartStore()
     commonStore.getProduct(product_id)
     let product_detail = computed(()=> commonStore.product_detail)
+    let process = computed(()=> cartStore.process)
 
     const token_details = computed(()=> authStore.token)
     const token = token_details.value
 
+    const user_data = computed(()=> authStore.user_data)
+
     watch(token_details, (newToken, oldToken)=> { token = newToken.value })
 
     const form = reactive({
+        user_id: user_data.value.id,
         product_id: 0,
-        option_id: 0,
+        product_option_detail_id: 0,
         quantity: 1,
         remaining_item: 0,
         per_unit_price: 0,
@@ -111,7 +117,7 @@
                     }
 
                     form.remaining_item = detail.quantity;
-                    form.option_id = detail.id
+                    form.product_option_detail_id = detail.id
 
                     let price = detail.original_price
                     if(token != null){
@@ -120,19 +126,37 @@
 
                     form.per_unit_price = price
                     form.total_price = price * form.quantity
-                    form.product_id = detail.id
+                    form.product_id = detail.product_id
                 }
             })
         }
 
     }
 
-    const adjustItemQuantity = (action) => {
-
+    // Single option adjustment
+    const addProductOptionDetail = () => {
         if(form.product_id == 0){
             const current_option_details = product_detail.value.product_option_details;
-            form.product_id = current_option_details[0].id
+            form.product_id = current_option_details[0].product_id
+            form.product_option_detail_id = current_option_details[0].id
+            form.remaining_item = current_option_details[0].quantity
+            form.per_unit_price = current_option_details[0].original_price
+
+            if(token != null && current_option_details[0].member_price != 0){
+                form.per_unit_price = current_option_details[0].member_price
+            }
+
+            if(token != null && current_option_details[0].sale_member_price != 0){
+                form.per_unit_price = current_option_details[0].sale_member_price
+            }
+
+            form.total_price = form.per_unit_price * form.quantity
         }
+    }
+
+    const adjustItemQuantity = (action) => {
+
+        addProductOptionDetail()
 
         if(form.remaining_item == 0){
             return;
@@ -164,7 +188,13 @@
             toast.warning("Please login to continue.")
         }
 
-        console.log("current form: ", form)
+        addProductOptionDetail()
+
+        let current_total_price = form.total_price
+        form.total_price = current_total_price.toFixed(2)
+
+        console.log("submit form: ", form)
+        cartStore.addToCart(form)
     }
 
 </script>
