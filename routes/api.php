@@ -45,6 +45,6 @@ Route::prefix('v1')->group(function (){
 
     Route::prefix('cart')->middleware([ 'auth:api' ])->group(function () {
         Route::post('add', [CartController::class, 'addCart']);
-        Route::post('list', [CartController::class, 'getCartList']);
+        Route::get('list', [CartController::class, 'getCartList']);
     });
 });

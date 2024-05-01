@@ -57,8 +57,8 @@ class CartService{
     {
         $user = Auth::user();
         $list = $this->cart->with(['product'=> function($query){
-            $query->with('product_option_details');
-        }])->where([ 'user_id'=> $user->id, 'status'=> Cart::STATUS_NEW ]);
+            $query->with('product_images_filter');
+        }, 'product_option_details'])->where([ 'user_id'=> $user->id, 'status'=> Cart::STATUS_NEW ]);
 
         $paginate = $this->paginate;
         if(isset($request->paginate) && !empty($request->paginate)){
@@ -69,6 +69,13 @@ class CartService{
         foreach($list->items() as &$item)
         {
             $item->product->filterProductOptions();
+            if($item->product->product_options != null){
+                foreach($item->product_option_details->options as $key => &$value){
+                    if(isset($item->product->product_options[$key][$value])){
+                        $value = $item->product->product_options[$key][$value];
+                    }
+                }
+            }
         }
 
         return successResponse($list);

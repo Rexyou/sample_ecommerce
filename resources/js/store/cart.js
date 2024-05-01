@@ -6,8 +6,10 @@ import { useAuthStore } from "./auth";
 export const useCartStore = defineStore('cart', {
     state: ()=> ({
         cart_list: [],
+        cart_list_pagination: [],
         process: false,
-        successResponse: false
+        successResponse: false,
+        validation_errors: []
     }),
     actions: {
         async addToCart(data){
@@ -49,30 +51,27 @@ export const useCartStore = defineStore('cart', {
                 console.log(error)
             }
         },
-        async updateUser(data){
-            this.process = true
+        async cartList(data){
+            const authStore = useAuthStore()
             try {                
-                await axiosInstance.post(`/user/update_user`, data, {
+                await axiosInstance.get(`/cart/list`, {
                     headers: {
-                      'Authorization': `Bearer ${this.token}`
+                      'Authorization': `Bearer ${authStore.token}`
                     }
                 })
                 .then(async (response)=> {
-                    this.process = false
-                    console.log("update user: ")
-                    console.log(response.data)
-                    toast.success("Update setting success");
-                    this.user_data = response.data.data
-                    this.successResponse = true
+                    console.log("cart list: ")
+                    console.log("full list: ", response.data.data)
+                    console.log("list data: ", response.data.data.data)
+                    this.cart_list = response.data.data.data
+                    this.cart_list_pagination = response.data.data
                 })
                 .catch(async (error)=> {
-                    this.process = false
-                    this.successResponse = false
                     console.log('axios error:')
                     console.log(error)
                     if(error.response.data.code == 401){
-                        this.user_data = []
-                        this.token = null
+                        authStore.user_data = []
+                        authStore.token = null
                         await this.router.push({ name: 'login' }); 
                         toast.error(error.response.data.message);
                     }
@@ -83,8 +82,6 @@ export const useCartStore = defineStore('cart', {
                 })
 
             } catch (error) {
-                this.process = false
-                this.successResponse = false
                 console.log("try catch:")
                 console.log(error)
             }

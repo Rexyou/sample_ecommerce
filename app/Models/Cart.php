@@ -38,4 +38,9 @@ class Cart extends Model
     {
         return $this->hasOne(Product::class, 'id', 'product_id');
     }
+
+    public function product_option_details()
+    {
+        return $this->hasOne(ProductOptionDetail::class, 'id', 'product_option_detail_id');
+    }
 }
