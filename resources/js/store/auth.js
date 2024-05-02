@@ -11,7 +11,8 @@ export const useAuthStore = defineStore('auth', {
         successResponse: false,
     }),
     persist: {
-        storage: sessionStorage,
+        // storage: sessionStorage,
+        storage: localStorage,
     },
     actions: {
         async login(data){
