@@ -71,6 +71,7 @@
     const currentProcess = computed(()=> cartStore.process)
     const route = useRoute()
     const queryPage = route.query.page
+    console.log("current route data: ", route)
     let currentPage = currentPageData.value
 
     if(queryPage != undefined && currentPage != queryPage){

@@ -81,7 +81,7 @@ const router = createRouter({
   }
 })
 
-router.beforeEach(async (to, from)=> {
+router.beforeEach(async (to, from, next)=> {
   console.log("to: ", to)
   console.log("from: ", from)
   const commonStore = useCommonStore()
@@ -110,9 +110,17 @@ router.beforeEach(async (to, from)=> {
     commonStore.menu_change_color = false;
   }
 
+  if(to.name === "cart"){
+    cartStore.cart_list = []
+    console.log("current page: ", currentPage.value)
+    to.query.page = currentPage.value;
+  }
+
   if((to.name == "brand" && to.params.brand_id == "") || (to.name == "product" && to.params.product_id == "")){
     return { name: 'error' }
   }
+
+  next()
 })
 
 export default router
