@@ -12,6 +12,8 @@ import cartView from '../views/cartView.vue';
 import errorView from '../views/errorView.vue';
 import { useCommonStore } from '../store/general';
 import { useAuthStore } from '../store/auth';
+import { computed } from 'vue'
+import { useCartStore } from '../store/cart'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -80,14 +82,19 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to, from)=> {
+  console.log("to: ", to)
+  console.log("from: ", from)
   const commonStore = useCommonStore()
   const authStore = useAuthStore();
+  const cartStore = useCartStore();
   const authUserData = authStore.user_data;
   const token = authStore.token;
 
   const blackFontPage = [ 'product', 'product_list', 'login', 'profile' ];
   const authPage = [ 'profile', 'cart' ];
   const guestPage = [ 'login', 'register' ];
+
+  const currentPage = computed(()=> cartStore.current_page)
   
   if(authPage.includes(to.name) && Object.keys(authUserData).length == 0 && token == null){
     return { name: 'login' }
@@ -101,6 +108,16 @@ router.beforeEach(async (to, from)=> {
   }
   else {
     commonStore.menu_change_color = false;
+  }
+
+  if(to.name == "cart" && from.name != "cart"){
+    cartStore.cart_list = []
+    cartStore.cart_list_pagination= []
+    console.log("current value: ", currentPage.value)
+    for(var i=1; i< currentPage.value; i++)
+    {
+      cartStore.cartList(i)
+    }
   }
 
   if((to.name == "brand" && to.params.brand_id == "") || (to.name == "product" && to.params.product_id == "")){
