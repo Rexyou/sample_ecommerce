@@ -110,16 +110,6 @@ router.beforeEach(async (to, from)=> {
     commonStore.menu_change_color = false;
   }
 
-  if(to.name == "cart" && from.name != "cart"){
-    cartStore.cart_list = []
-    cartStore.cart_list_pagination= []
-    console.log("current value: ", currentPage.value)
-    for(var i=1; i< currentPage.value; i++)
-    {
-      cartStore.cartList(i)
-    }
-  }
-
   if((to.name == "brand" && to.params.brand_id == "") || (to.name == "product" && to.params.product_id == "")){
     return { name: 'error' }
   }

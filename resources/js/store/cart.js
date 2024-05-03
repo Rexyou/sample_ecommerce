@@ -65,8 +65,6 @@ export const useCartStore = defineStore('cart', {
                     this.cart_list.push(...response.data.data.data)
                     this.cart_list_pagination = response.data.data
                     this.current_page = page
-
-                    await this.router.push({ name: 'cart', query: { page } }); 
                     this.process = false
                 })
                 .catch(async (error)=> {

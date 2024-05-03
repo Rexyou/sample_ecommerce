@@ -73,19 +73,19 @@
     const queryPage = route.query.page
     let currentPage = currentPageData.value
 
-    onMounted(async()=> {
-        if(queryPage != undefined && currentPage != queryPage){
-            currentPage = queryPage
-            cartStore.current_page = queryPage
-        }
+    if(queryPage != undefined && currentPage != queryPage){
+        currentPage = queryPage
+        cartStore.cart_list = []
+        cartStore.cart_list_pagination= []
+        cartStore.current_page = queryPage
+    }
 
-        for(let i = 1; i <= currentPageData.value; i++)
-        {
-            cartStore.cartList(i)
-        }
+    for(let i = 1; i <= currentPageData.value; i++)
+    {
+        cartStore.cartList(i)
+    }
 
-        commonStore.getComponent('cart_list', 'cover_page');
-    })
+    commonStore.getComponent('cart_list', 'cover_page');
     const { brand_list_page_cover } = storeToRefs(commonStore)
 
     const currentDetail = reactive({
