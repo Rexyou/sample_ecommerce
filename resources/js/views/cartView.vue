@@ -9,7 +9,7 @@
                     <div class="product_image" v-if="cart.product.icon_image_url != null" :style="{ background: `url('${cart.product.icon_image_url}')` }"></div>
                     <div class="product_image" v-if="cart.product.product_images_filter != null" :style="{ background: `url('${cart.product.product_images_filter[0].image_url}')` }"></div>
                     <div class="product_detail">
-                        <h1>{{ cart.product.name }}</h1>
+                        <h1>{{ cart.id+"->"+cart.product.name }}</h1>
                         <div v-if="cart.product_option_details.options != null" class="selected_option_box">
                             <div v-for="(value, key) in cart.product_option_details.options" :key="key" class="selected_options">
                                 <span>{{ key }} : {{ value }}</span>
@@ -61,19 +61,42 @@
     import { onMounted, computed, reactive, watch } from 'vue'
     import { storeToRefs } from 'pinia'
     import { useCartStore } from "../store/cart";
+    import { useRoute } from "vue-router";
 
     const commonStore = useCommonStore()
     const cartStore = useCartStore()
+    const cartList = computed(()=> cartStore.cart_list)
+    const paginationData = computed(()=> cartStore.cart_list_pagination)
+    const currentPageData = computed(()=> cartStore.current_page)
+    const currentProcess = computed(()=> cartStore.process)
+    const route = useRoute()
+    const queryPage = route.query.page
+    let currentPage = currentPageData.value
+
     onMounted(async()=> {
-        cartStore.cartList()
+        if(queryPage != undefined && currentPage != queryPage){
+            currentPage = queryPage
+            cartStore.current_page = queryPage
+        }
+
+        for(let i = 1; i <= currentPageData.value; i++)
+        {
+            cartStore.cartList(i)
+        }
+
         commonStore.getComponent('cart_list', 'cover_page');
     })
     const { brand_list_page_cover } = storeToRefs(commonStore)
-    const cartList = computed(()=> cartStore.cart_list)
-    const paginationData = computed(()=> cartStore.cart_list_pagination)
 
-    console.log("cart view list: ", cartList.value)
-    console.log("pagination data: ", paginationData.value)
+    const currentDetail = reactive({
+        total_pages: 0,
+        total_items: 0,
+    })
+
+    watch(paginationData, (newData)=> {
+        currentDetail.total_pages = newData.last_page
+        currentDetail.total_items = newData.total
+    })
 
     const form = reactive({
         total_price: 0,
@@ -84,6 +107,15 @@
     const adjustItemQuantity = (action) => {
         console.log("current_action: ", action)
     }
+
+    window.onscroll = function(ev) {
+        if ((window.innerHeight + Math.round(window.scrollY)) >= document.body.offsetHeight) {
+            if(currentPageData.value < currentDetail.total_pages && !currentProcess.value){
+                const next_page = currentPageData.value + 1
+                cartStore.cartList(next_page)
+            }
+        }
+    };
 </script>
 
 <style scoped>

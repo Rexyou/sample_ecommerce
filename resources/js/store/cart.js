@@ -9,7 +9,8 @@ export const useCartStore = defineStore('cart', {
         cart_list_pagination: [],
         process: false,
         successResponse: false,
-        validation_errors: []
+        validation_errors: [],
+        current_page: 1,
     }),
     actions: {
         async addToCart(data){
@@ -51,24 +52,27 @@ export const useCartStore = defineStore('cart', {
                 console.log(error)
             }
         },
-        async cartList(data){
+        async cartList(page){
+            this.process = true
             const authStore = useAuthStore()
             try {                
-                await axiosInstance.get(`/cart/list`, {
+                await axiosInstance.get(`/cart/list?page=${page}`, {
                     headers: {
                       'Authorization': `Bearer ${authStore.token}`
                     }
                 })
                 .then(async (response)=> {
-                    console.log("cart list: ")
-                    console.log("full list: ", response.data.data)
-                    console.log("list data: ", response.data.data.data)
-                    this.cart_list = response.data.data.data
+                    this.cart_list.push(...response.data.data.data)
                     this.cart_list_pagination = response.data.data
+                    this.current_page = page
+
+                    await this.router.push({ name: 'cart', query: { page } }); 
+                    this.process = false
                 })
                 .catch(async (error)=> {
                     console.log('axios error:')
                     console.log(error)
+                    this.process = false
                     if(error.response.data.code == 401){
                         authStore.user_data = []
                         authStore.token = null
@@ -84,6 +88,7 @@ export const useCartStore = defineStore('cart', {
             } catch (error) {
                 console.log("try catch:")
                 console.log(error)
+                this.process = false
             }
         },
     }

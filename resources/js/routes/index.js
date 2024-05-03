@@ -72,8 +72,10 @@ const router = createRouter({
       component: errorView 
     },
   ],
-  scrollBehavior() {
-    return { top: 0, left: 0 }
+  scrollBehavior(to, from, savedPosition) {
+    if(to.name != "cart"){
+      return { top: 0, left: 0 }
+    }
   }
 })
 

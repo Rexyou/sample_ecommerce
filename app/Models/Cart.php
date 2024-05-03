@@ -14,6 +14,7 @@ class Cart extends Model
     const STATUS_NEW = 1;
     const STATUS_PENDING_PAYMENT = 2;
     const STATUS_PAID = 3;
+    const STATUS_DELETE = 4;
 
     protected $guarded = [];
     protected $table = "cart";
