@@ -106,6 +106,9 @@
     })
 
     const adjustItemQuantity = (action, data) => {
+        const current_quantity = data.quantity
+        const product_current_quantity = data.product_option_details.quantity
+        
         console.log("current quantity: ", data.quantity)
         console.log("current_data: ", data)
         console.log("current_action: ", action)
