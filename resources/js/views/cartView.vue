@@ -17,13 +17,13 @@
                         </div>
                     </div>
                     <div class="product_quantity">
-                        <button @click.prevent="adjustItemQuantity('minus')">
+                        <button @click.prevent="adjustItemQuantity('minus', cart)">
                             <v-icon name="hi-minus-circle"/>
                         </button>
                         <div class="current_quantity">
-                            <span>{{ cart.quantity }}</span>
+                            <span :id="`current_quantity_${cart.id}`">{{ cart.quantity }}</span>
                         </div>
-                        <button @click.prevent="adjustItemQuantity('add')">
+                        <button @click.prevent="adjustItemQuantity('add', cart)">
                             <v-icon name="hi-plus-circle"/>
                         </button>
                     </div>
@@ -105,7 +105,9 @@
         estimate_price: 0
     })
 
-    const adjustItemQuantity = (action) => {
+    const adjustItemQuantity = (action, data) => {
+        console.log("current quantity: ", data.quantity)
+        console.log("current_data: ", data)
         console.log("current_action: ", action)
     }
 

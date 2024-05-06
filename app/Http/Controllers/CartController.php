@@ -23,4 +23,16 @@ class CartController extends Controller
         $result = $this->cartService->getCartList($request);
         return finalResponse($result);
     }
+
+    public function adjustCartDetail(Request $request)
+    {
+        $result = $this->cartService->adjustCartDetail($request);
+        return finalResponse($result);
+    }
+
+    public function removeCartItem(Request $request)
+    {
+        $result = $this->cartService->removeCartItem($request);
+        return finalResponse($result);
+    }
 }
