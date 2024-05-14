@@ -89,5 +89,50 @@ export const useCartStore = defineStore('cart', {
                 this.process = false
             }
         },
+        async adjustCartDetail(data){
+            const authStore = useAuthStore()
+            try {                
+                const response = await axiosInstance.post(`/cart/adjustment`, data, {
+                    headers: {
+                      'Authorization': `Bearer ${authStore.token}`
+                    }
+                })
+
+                return response.data
+
+            } catch (error) {
+                console.log("try catch:")
+                console.log(error)
+                return error.response.data;
+            }
+        },
+        async removeCartItem(id){
+            const authStore = useAuthStore()
+            try {                
+                const response = await axiosInstance.post(`/cart/remove/${id}`, {}, {
+                    headers: {
+                      'Authorization': `Bearer ${authStore.token}`
+                    }
+                })
+
+                return response.data
+
+            } catch (error) {
+                console.log("try catch:")
+                console.log(error)
+                return error.response.data;
+            }
+        },
+        deleteItem(index)
+        {
+            const currentList = this.cart_list
+            currentList.splice(index, 1)
+            console.log("after list: ", currentList)
+
+            // console.log("current index: ", index)
+            // const newList = currentList.filter((item, currentIndex)=> { return currentIndex != index })
+            // console.log("new_list: ", newList)
+            // this.cart_list = newList
+        }
     }
 });

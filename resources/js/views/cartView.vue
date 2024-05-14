@@ -9,6 +9,7 @@
                     <div class="product_image" v-if="cart.product.icon_image_url != null" :style="{ background: `url('${cart.product.icon_image_url}')` }"></div>
                     <div class="product_image" v-if="cart.product.product_images_filter != null" :style="{ background: `url('${cart.product.product_images_filter[0].image_url}')` }"></div>
                     <div class="product_detail">
+                        <span>current index: {{ index }}</span>
                         <h1>{{ cart.id+"->"+cart.product.name }}</h1>
                         <div v-if="cart.product_option_details.options != null" class="selected_option_box">
                             <div v-for="(value, key) in cart.product_option_details.options" :key="key" class="selected_options">
@@ -17,13 +18,13 @@
                         </div>
                     </div>
                     <div class="product_quantity">
-                        <button @click.prevent="adjustItemQuantity('minus', cart)">
+                        <button @click.prevent="adjustItemQuantity('minus', cart, index)">
                             <v-icon name="hi-minus-circle"/>
                         </button>
                         <div class="current_quantity">
                             <span :id="`current_quantity_${cart.id}`">{{ cart.quantity }}</span>
                         </div>
-                        <button @click.prevent="adjustItemQuantity('add', cart)">
+                        <button @click.prevent="adjustItemQuantity('add', cart, index)">
                             <v-icon name="hi-plus-circle"/>
                         </button>
                     </div>
@@ -62,6 +63,7 @@
     import { storeToRefs } from 'pinia'
     import { useCartStore } from "../store/cart";
     import { useRoute } from "vue-router";
+    import { toast } from 'vue3-toastify';
 
     const commonStore = useCommonStore()
     const cartStore = useCartStore()
@@ -105,13 +107,50 @@
         estimate_price: 0
     })
 
-    const adjustItemQuantity = (action, data) => {
-        const current_quantity = data.quantity
+    const adjustItemQuantity = async (action, data, index) => {
+        let quantity = data.quantity
         const product_current_quantity = data.product_option_details.quantity
+        // const current_id = `current_quantity_${data.id}`
         
-        console.log("current quantity: ", data.quantity)
-        console.log("current_data: ", data)
-        console.log("current_action: ", action)
+        if(quantity == product_current_quantity){
+            toast.warning("quantity_reached_limit")
+        }
+
+        if(action == "add"){
+            quantity += 1
+        }
+        else {
+            quantity -= 1
+        }
+
+        if(quantity <= 0){
+            return removeCartItem(data.id, index)
+        }
+
+        const result = await cartStore.adjustCartDetail({ id: data.id, quantity })
+        if(!result.status || !result){
+            let current_error_message = result.message
+            if(typeof current_error_message != 'string'){
+                current_error_message = "something_went_wrong"
+            }
+            return toast.error(current_error_message)
+        }
+        cartList.value[index] = result.data
+    }
+
+    const removeCartItem = async(id, index) => {
+        const result = await cartStore.removeCartItem(id)
+        if(!result.status || !result){
+            let current_error_message = result.message
+            if(typeof current_error_message != 'string'){
+                current_error_message = "something_went_wrong"
+            }
+            return toast.error(current_error_message)
+        }
+
+        cartStore.deleteItem(index)
+
+        return toast.info("remove_item_success")
     }
 
     window.onscroll = function(ev) {

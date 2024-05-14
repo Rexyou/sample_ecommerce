@@ -84,6 +84,20 @@ class CartService{
         return successResponse($list);
     }
 
+    public function getCart($id)
+    {
+        $user = Auth::user();
+        $data = $this->cart->with(['product'=> function($query){
+            $query->with('product_images_filter');
+        }, 'product_option_details'])->where([ 'id'=> $id, 'user_id'=> $user->id ])->first();
+
+        if(!$data){
+            $data = [];
+        }
+
+        return successResponse($data);
+    }
+
     public function checkCartDetail($id, $user_id=0)
     {
         $condition = [ 'id'=> $id ];
@@ -161,7 +175,7 @@ class CartService{
                 }
                 
                 DB::commit();
-                return successResponse();
+                return $this->getCart($data->id);
 
             } catch (\Exception $e) {
 
