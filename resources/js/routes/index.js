@@ -97,10 +97,12 @@ router.beforeEach(async (to, from, next)=> {
   const currentPage = computed(()=> cartStore.current_page)
   
   if(authPage.includes(to.name) && Object.keys(authUserData).length == 0 && token == null){
-    return { name: 'login' }
+    next({ name: 'login' })
+    return
   }
   else if(guestPage.includes(to.name) && Object.keys(authUserData).length != 0 && token != null){
-    return { name: 'profile' }
+    next({ name: 'profile' })
+    return
   }
 
   if(blackFontPage.includes(to.name)){
@@ -112,12 +114,12 @@ router.beforeEach(async (to, from, next)=> {
 
   if(to.name === "cart"){
     cartStore.cart_list = []
-    console.log("current page: ", currentPage.value)
     to.query.page = currentPage.value;
   }
 
   if((to.name == "brand" && to.params.brand_id == "") || (to.name == "product" && to.params.product_id == "")){
-    return { name: 'error' }
+    next({ name: 'error' })
+    return
   }
 
   next()

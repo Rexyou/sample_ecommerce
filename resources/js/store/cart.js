@@ -127,7 +127,6 @@ export const useCartStore = defineStore('cart', {
         {
             const currentList = this.cart_list
             currentList.splice(index, 1)
-            console.log("after list: ", currentList)
 
             // console.log("current index: ", index)
             // const newList = currentList.filter((item, currentIndex)=> { return currentIndex != index })

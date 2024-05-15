@@ -6,27 +6,32 @@
         <div class="cart_container">
             <div v-if="cartList.length > 0" class="cart_list">
                 <div v-for="(cart, index) in cartList" :key="index" class="cart_item">
-                    <div class="product_image" v-if="cart.product.icon_image_url != null" :style="{ background: `url('${cart.product.icon_image_url}')` }"></div>
-                    <div class="product_image" v-if="cart.product.product_images_filter != null" :style="{ background: `url('${cart.product.product_images_filter[0].image_url}')` }"></div>
-                    <div class="product_detail">
-                        <span>current index: {{ index }}</span>
-                        <h1>{{ cart.id+"->"+cart.product.name }}</h1>
-                        <div v-if="cart.product_option_details.options != null" class="selected_option_box">
-                            <div v-for="(value, key) in cart.product_option_details.options" :key="key" class="selected_options">
-                                <span>{{ key }} : {{ value }}</span>
+                    <div class="cart_checkbox">
+                        <input type="checkbox" :id="`checkbox_${cart.id}`" class="cart_checkbox_item" v-model="form.selected_cart_id" :value="cart.id">
+                    </div>
+                    <div class="cart_details">
+                        <div class="product_image" v-if="cart.product.icon_image_url != null" :style="{ background: `url('${cart.product.icon_image_url}')` }"></div>
+                        <div class="product_image" v-if="cart.product.product_images_filter != null" :style="{ background: `url('${cart.product.product_images_filter[0].image_url}')` }"></div>
+                        <div class="product_detail">
+                            <span>id: {{ cart.id }}</span>
+                            <h1>{{ cart.product.name }}</h1>
+                            <div v-if="cart.product_option_details.options != null" class="selected_option_box">
+                                <div v-for="(value, key) in cart.product_option_details.options" :key="key" class="selected_options">
+                                    <span>{{ key }} : {{ value }}</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="product_quantity">
-                        <button @click.prevent="adjustItemQuantity('minus', cart, index)">
-                            <v-icon name="hi-minus-circle"/>
-                        </button>
-                        <div class="current_quantity">
-                            <span :id="`current_quantity_${cart.id}`">{{ cart.quantity }}</span>
+                        <div class="product_quantity">
+                            <button @click.prevent="adjustItemQuantity('minus', cart, index)">
+                                <v-icon name="hi-minus-circle"/>
+                            </button>
+                            <div class="current_quantity">
+                                <span :id="`current_quantity_${cart.id}`">{{ cart.quantity }}</span>
+                            </div>
+                            <button @click.prevent="adjustItemQuantity('add', cart, index)">
+                                <v-icon name="hi-plus-circle"/>
+                            </button>
                         </div>
-                        <button @click.prevent="adjustItemQuantity('add', cart, index)">
-                            <v-icon name="hi-plus-circle"/>
-                        </button>
                     </div>
                 </div>
             </div>
@@ -41,12 +46,12 @@
                     </div>
                     <div class="price_list">
                         <span>Total Shipping</span>
-                        <span>{{ form.total_shipping.toFixed(2) }}</span>
+                        <span>{{ form.total_shipping }}</span>
                     </div>
                     <hr>
                     <div class="price_list">
                         <span>Estimate Price</span>
-                        <span>{{ form.estimate_price.toFixed(2) }}</span>
+                        <span>{{ form.estimate_price }}</span>
                     </div>
                     <div class="payment_section">
                         <button>Proceed Payment</button>
@@ -73,7 +78,6 @@
     const currentProcess = computed(()=> cartStore.process)
     const route = useRoute()
     const queryPage = route.query.page
-    console.log("current route data: ", route)
     let currentPage = currentPageData.value
 
     if(queryPage != undefined && currentPage != queryPage){
@@ -104,7 +108,12 @@
     const form = reactive({
         total_price: 0,
         total_shipping: 0,
-        estimate_price: 0
+        estimate_price: 0,
+        selected_cart_id: []
+    })
+
+    watch(form, (newData)=> {
+        cartCalculation(newData)
     })
 
     const adjustItemQuantity = async (action, data, index) => {
@@ -124,7 +133,7 @@
         }
 
         if(quantity <= 0){
-            return removeCartItem(data.id, index)
+            return removeCartItem(data, index)
         }
 
         const result = await cartStore.adjustCartDetail({ id: data.id, quantity })
@@ -136,10 +145,12 @@
             return toast.error(current_error_message)
         }
         cartList.value[index] = result.data
+
+        cartCalculation(form)
     }
 
-    const removeCartItem = async(id, index) => {
-        const result = await cartStore.removeCartItem(id)
+    const removeCartItem = async(data, index) => {
+        const result = await cartStore.removeCartItem(data.id)
         if(!result.status || !result){
             let current_error_message = result.message
             if(typeof current_error_message != 'string'){
@@ -149,8 +160,36 @@
         }
 
         cartStore.deleteItem(index)
+        calculateTotal(data)
 
         return toast.info("remove_item_success")
+    }
+
+    const calculateTotal = (currentData) => {
+
+        form.total_price -= parseFloat(currentData.total_price)
+        form.estimate_price -= parseFloat(currentData.total_price)
+
+        let newList = form.selected_cart_id.filter((item)=> { return item != currentData.id })
+        form.selected_cart_id = newList
+
+        // Current list update check box
+        console.log("current selected cart list: ", form.selected_cart_id)
+
+    }
+
+    const cartCalculation = (form) => {
+        let finalTotal = 0
+        const currentSelectedItem = form.selected_cart_id
+        const currentCartItems = cartList.value
+        currentSelectedItem.forEach((item)=> {
+            let currentItemDetail = currentCartItems.find((data)=> { return data.id == item })
+            console.log("current_item: ", item)
+            console.log(currentItemDetail.total_price)
+            finalTotal += parseFloat(currentItemDetail.total_price)
+        })
+        form.total_price = finalTotal
+        form.estimate_price = finalTotal
     }
 
     window.onscroll = function(ev) {
@@ -212,11 +251,31 @@
     }
 
     .cart_item {
+        display: flex;
         width: 100%;
+        /* justify-content: space-around; */
+    }
+
+    .cart_details {
+        width: 85%;
         height: 180px;
-        margin: 30px auto;
+        margin: 30px 0px;
         display: flex;
         box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+        background: transparent;
+    }
+
+    .cart_checkbox {
+        width: 10%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .cart_checkbox_item {
+        accent-color: red;
+        width: 18px;
+        height: 18px;
     }
 
     .product_image {
