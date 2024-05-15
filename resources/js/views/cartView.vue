@@ -5,6 +5,7 @@
         </div>
         <div class="cart_container">
             <div v-if="cartList.length > 0" class="cart_list">
+                <h1 class="cart_item_count">Total items ({{ paginationData.total }})</h1>
                 <div v-for="(cart, index) in cartList" :key="index" class="cart_item">
                     <div class="cart_checkbox">
                         <input type="checkbox" :id="`checkbox_${cart.id}`" class="cart_checkbox_item" v-model="form.selected_cart_id" :value="cart.id">
@@ -13,7 +14,6 @@
                         <div class="product_image" v-if="cart.product.icon_image_url != null" :style="{ background: `url('${cart.product.icon_image_url}')` }"></div>
                         <div class="product_image" v-if="cart.product.product_images_filter != null" :style="{ background: `url('${cart.product.product_images_filter[0].image_url}')` }"></div>
                         <div class="product_detail">
-                            <span>id: {{ cart.id }}</span>
                             <h1>{{ cart.product.name }}</h1>
                             <div v-if="cart.product_option_details.options != null" class="selected_option_box">
                                 <div v-for="(value, key) in cart.product_option_details.options" :key="key" class="selected_options">
@@ -46,15 +46,15 @@
                     </div>
                     <div class="price_list">
                         <span>Total Shipping</span>
-                        <span>{{ form.total_shipping }}</span>
+                        <span>{{ form.total_shipping.toFixed(2) }}</span>
                     </div>
                     <hr>
                     <div class="price_list">
                         <span>Estimate Price</span>
-                        <span>{{ form.estimate_price }}</span>
+                        <span>{{ form.estimate_price.toFixed(2) }}</span>
                     </div>
                     <div class="payment_section">
-                        <button>Proceed Payment</button>
+                        <button :disabled="form.process_payment_locker">Proceed Payment</button>
                     </div>
                 </div>
             </div>
@@ -109,7 +109,8 @@
         total_price: 0,
         total_shipping: 0,
         estimate_price: 0,
-        selected_cart_id: []
+        selected_cart_id: [],
+        process_payment_locker: true
     })
 
     watch(form, (newData)=> {
@@ -184,12 +185,17 @@
         const currentCartItems = cartList.value
         currentSelectedItem.forEach((item)=> {
             let currentItemDetail = currentCartItems.find((data)=> { return data.id == item })
-            console.log("current_item: ", item)
-            console.log(currentItemDetail.total_price)
             finalTotal += parseFloat(currentItemDetail.total_price)
         })
         form.total_price = finalTotal
         form.estimate_price = finalTotal
+
+        if(form.selected_cart_id.length == 0){
+            form.process_payment_locker = true
+        }
+        else {
+            form.process_payment_locker = false
+        }
     }
 
     window.onscroll = function(ev) {
@@ -248,6 +254,10 @@
         display: flex;
         align-items: center;
         justify-content: center;
+    }
+
+    .cart_item_count {
+        margin: 20px 0px 20px 30px
     }
 
     .cart_item {
