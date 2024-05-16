@@ -54,7 +54,9 @@
                         <span>{{ form.estimate_price.toFixed(2) }}</span>
                     </div>
                     <div class="payment_section">
-                        <button :disabled="form.process_payment_locker">Proceed Payment</button>
+                        <router-link :to="{ name: 'prepayment' }">
+                            <button :disabled="form.process_payment_locker">Proceed Payment</button>
+                        </router-link>
                     </div>
                 </div>
             </div>
@@ -67,7 +69,7 @@
     import { onMounted, computed, reactive, watch } from 'vue'
     import { storeToRefs } from 'pinia'
     import { useCartStore } from "../store/cart";
-    import { useRoute } from "vue-router";
+    import { useRoute, useRouter } from "vue-router";
     import { toast } from 'vue3-toastify';
 
     const commonStore = useCommonStore()
@@ -77,6 +79,7 @@
     const currentPageData = computed(()=> cartStore.current_page)
     const currentProcess = computed(()=> cartStore.process)
     const route = useRoute()
+    const router = useRouter()
     const queryPage = route.query.page
     let currentPage = currentPageData.value
 
@@ -196,6 +199,8 @@
         else {
             form.process_payment_locker = false
         }
+
+        cartStore.selected_cart_item = form.selected_cart_id
     }
 
     window.onscroll = function(ev) {
@@ -378,6 +383,10 @@
 
     .payment_section {
         margin: 10px 0px;
+    }
+
+    .payment_section a {
+        text-decoration: none;
     }
 
     .payment_section button {

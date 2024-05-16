@@ -48,5 +48,6 @@ Route::prefix('v1')->group(function (){
         Route::get('list', [CartController::class, 'getCartList']);
         Route::post('adjustment', [CartController::class, 'adjustCartDetail']);
         Route::post('remove/{id}', [CartController::class, 'removeCartItem']);
+        Route::post('batch_details', [CartController::class, 'batchGetCartDetail']);
     });
 });

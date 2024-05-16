@@ -98,6 +98,31 @@ class CartService{
         return successResponse($data);
     }
 
+    public function updateCurrentCart($id)
+    {
+        $current_data_detail = $this->getCart($id);
+        $current_data = $current_data_detail['data'];
+
+        $product_option_details = $current_data->product_option_details;
+        $current_price = $current_data->per_unit_price;
+        if($current_price > $product_option_details->member_price){
+            $current_price = $product_option_details->member_price;
+        }
+        
+        if($product_option_details->sale_member_price != 0 && $current_price > $product_option_details->sale_member_price){
+            $current_price = $product_option_details->sale_member_price;
+        }
+
+        $quantity = $current_data->quantity;
+        $final_price = $current_price * $quantity;
+
+        $current_data->per_unit_price = $current_price;
+        $current_data->total_price = $final_price;
+        $current_data->save();
+
+        return successResponse($current_data);
+    }
+
     public function checkCartDetail($id, $user_id=0)
     {
         $condition = [ 'id'=> $id ];

@@ -10,6 +10,7 @@ import profileDetailView from '../views/profileDetailView.vue';
 import registerView from '../views/registerView.vue';
 import cartView from '../views/cartView.vue';
 import errorView from '../views/errorView.vue';
+import prepaymentView from '../views/prepaymentView.vue'
 import { useCommonStore } from '../store/general';
 import { useAuthStore } from '../store/auth';
 import { computed } from 'vue'
@@ -68,6 +69,12 @@ const router = createRouter({
       name: 'cart',
       component: cartView
     },
+    {
+      path: '/prepayment',
+      name: 'prepayment',
+      component: prepaymentView,
+      props: true
+    },
     { 
       path: '/:pathMatch(.*)*', 
       name: 'error',
@@ -90,11 +97,12 @@ router.beforeEach(async (to, from, next)=> {
   const authUserData = authStore.user_data;
   const token = authStore.token;
 
-  const blackFontPage = [ 'product', 'product_list', 'login', 'profile' ];
+  const blackFontPage = [ 'product', 'product_list', 'login', 'profile', 'prepayment' ];
   const authPage = [ 'profile', 'cart' ];
   const guestPage = [ 'login', 'register' ];
 
   const currentPage = computed(()=> cartStore.current_page)
+  const currentSelectedList = computed(()=> cartStore.selected_cart_item)
   
   if(authPage.includes(to.name) && Object.keys(authUserData).length == 0 && token == null){
     next({ name: 'login' })
@@ -115,6 +123,16 @@ router.beforeEach(async (to, from, next)=> {
   if(to.name === "cart"){
     cartStore.cart_list = []
     to.query.page = currentPage.value;
+  }
+
+  if(to.name == "prepayment" && currentSelectedList.value.length == 0){
+    let route_name = from.name
+    if(route_name == undefined){
+      route_name = "cart"
+    }
+
+    next({ name: route_name })
+    return
   }
 
   if((to.name == "brand" && to.params.brand_id == "") || (to.name == "product" && to.params.product_id == "")){
