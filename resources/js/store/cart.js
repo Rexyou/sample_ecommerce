@@ -125,23 +125,23 @@ export const useCartStore = defineStore('cart', {
                 return error.response.data;
             }
         },
-        async getCartList(){
-            const data = this.selected_cart_item
-            try {
-                const authStore = useAuthStore();
-                await axiosInstance.post('/cart/batch_details', { list: data }, {
-                    headers: {
-                        'Authorization': `Bearer ${authStore.token}`
-                    }
-                }).then((response)=> {
-                    console.log("cart_batch_details: ", response.data.data)
-                })
+        // async getCartList(){
+        //     const data = this.selected_cart_item
+        //     try {
+        //         const authStore = useAuthStore();
+        //         await axiosInstance.post('/cart/batch_details', { list: data }, {
+        //             headers: {
+        //                 'Authorization': `Bearer ${authStore.token}`
+        //             }
+        //         }).then((response)=> {
+        //             console.log("cart_batch_details: ", response.data.data)
+        //         })
 
-            } catch (error) {
-                console.log("try catch")
-                console.log(error)
-            }
-        },
+        //     } catch (error) {
+        //         console.log("try catch")
+        //         console.log(error)
+        //     }
+        // },
         deleteItem(index)
         {
             const currentList = this.cart_list
@@ -151,6 +151,24 @@ export const useCartStore = defineStore('cart', {
             // const newList = currentList.filter((item, currentIndex)=> { return currentIndex != index })
             // console.log("new_list: ", newList)
             // this.cart_list = newList
-        }
+        },
+        async encryptionCartItem(mode, data)
+        {
+          try {
+
+            const authStore = useAuthStore()
+            const result = await axiosInstance.post(`/cart/${mode}`, data, {
+                headers: {
+                    'Authorization': `Bearer ${authStore.token}`
+                }
+            })
+
+            return result.data
+            
+          } catch (error) {
+            console.log("try catch")
+            console.log(error)
+          }  
+        },
     }
 });

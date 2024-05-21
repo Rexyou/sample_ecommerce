@@ -185,4 +185,6 @@ return [
         // 'Example' => App\Facades\Example::class,
     ])->toArray(),
 
+    'cart_secret' => env('CART_SECRET'),
+
 ];

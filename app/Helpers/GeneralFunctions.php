@@ -40,3 +40,17 @@
         $message = $e->getMessage()." at line ".$e->getLine()." in ".$e->getFile();
         return errorResponse('', $message, $e->getCode());
     }
+
+    function encrptList($list)
+    {
+        $encrypter = new Illuminate\Encryption\Encrypter(config('app.cart_secret'), 'AES-128-CBC');
+        $encrypted = $encrypter->encrypt($list);
+        return $encrypted;
+    }
+
+    function decryptList($key)
+    {
+        $decrypter = new Illuminate\Encryption\Encrypter(config('app.cart_secret'), 'AES-128-CBC');
+        $decrypted = $decrypter->decrypt($key);
+        return $decrypted;
+    }

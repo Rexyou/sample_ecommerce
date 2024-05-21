@@ -38,23 +38,35 @@ class CartController extends Controller
         return finalResponse($result);
     }
 
-    public function batchGetCartDetail(Request $request)
+    // public function batchGetCartDetail(Request $request)
+    // {
+    //     $validation = [ 'list'=> 'required|array|min:1' ];
+    //     $validator = Validator::make($request->all(), $validation);
+
+    //     if($validator->fails()){
+    //         return finalResponse(errorResponse("", $validator->messages(), Response::HTTP_UNPROCESSABLE_ENTITY));
+    //     }
+
+    //     $filter_list = $validator->validated();
+    //     $return_list = [];
+
+    //     foreach($filter_list['list'] as $id){
+    //         $result = $this->cartService->updateCurrentCart($id);
+    //         $return_list[$id] = $result['data'];
+    //     }
+
+    //     return finalResponse(successResponse($return_list));
+    // }
+
+    public function encryptCartItem(Request $request)
     {
-        $validation = [ 'list'=> 'required|array|min:1' ];
-        $validator = Validator::make($request->all(), $validation);
+        $result = $this->cartService->transfromCartList("encrypt", $request);
+        return finalResponse($result);
+    }
 
-        if($validator->fails()){
-            return finalResponse(errorResponse("", $validator->messages(), Response::HTTP_UNPROCESSABLE_ENTITY));
-        }
-
-        $filter_list = $validator->validated();
-        $return_list = [];
-
-        foreach($filter_list['list'] as $id){
-            $result = $this->cartService->updateCurrentCart($id);
-            $return_list[$id] = $result['data'];
-        }
-
-        return finalResponse(successResponse($return_list));
+    public function decryptCartKey(Request $request)
+    {
+        $result = $this->cartService->transfromCartList("decrypt", $request);
+        return finalResponse($result);
     }
 }

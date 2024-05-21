@@ -70,7 +70,7 @@ const router = createRouter({
       component: cartView
     },
     {
-      path: '/prepayment',
+      path: '/prepayment/:cart_key?',
       name: 'prepayment',
       component: prepaymentView,
       props: true
@@ -123,16 +123,6 @@ router.beforeEach(async (to, from, next)=> {
   if(to.name === "cart"){
     cartStore.cart_list = []
     to.query.page = currentPage.value;
-  }
-
-  if(to.name == "prepayment" && currentSelectedList.value.length == 0){
-    let route_name = from.name
-    if(route_name == undefined){
-      route_name = "cart"
-    }
-
-    next({ name: route_name })
-    return
   }
 
   if((to.name == "brand" && to.params.brand_id == "") || (to.name == "product" && to.params.product_id == "")){

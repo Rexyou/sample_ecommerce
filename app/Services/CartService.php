@@ -103,6 +103,10 @@ class CartService{
         $current_data_detail = $this->getCart($id);
         $current_data = $current_data_detail['data'];
 
+        if(!$current_data){
+            return errorResponse("", "cart_not_found", Response::HTTP_NOT_FOUND);
+        }
+
         $product_option_details = $current_data->product_option_details;
         $current_price = $current_data->per_unit_price;
         if($current_price > $product_option_details->member_price){
@@ -245,6 +249,49 @@ class CartService{
 
         }
 
+    }
+
+    public function transfromCartList($type, $request)
+    {
+        $data = [];
+        if($type == "encrypt"){
+
+            if($request->missing('cart_id') || count($request->cart_id) == 0){
+                return errorResponse("", "cart_list_empty", Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
+
+            $data = encrptList($request->all());
+
+            if($data == ""){
+                return errorResponse("", "encrypt_failure", Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
+
+        }
+        else {
+
+            
+            if($request->missing('cart_key') || !is_string($request->cart_key)){
+                return errorResponse("", "cart_key_empty", Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
+
+            $current_list = decryptList($request->cart_key);
+            if(isset($current_list['cart_id'])){
+                foreach($current_list['cart_id'] as $item){
+                    $checker = $this->updateCurrentCart($item);
+                    if(!$checker['status']){
+                        return $checker;
+                    }
+                    $data[$item] = $checker['data'];
+                }
+            }
+
+            if(count($data) == 0){
+                return errorResponse("", "list_empty", Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
+
+        }
+        
+        return successResponse($data);
     }
 
 }

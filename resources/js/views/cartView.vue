@@ -54,9 +54,7 @@
                         <span>{{ form.estimate_price.toFixed(2) }}</span>
                     </div>
                     <div class="payment_section">
-                        <router-link :to="{ name: 'prepayment' }">
-                            <button :disabled="form.process_payment_locker">Proceed Payment</button>
-                        </router-link>
+                        <button :disabled="form.process_payment_locker" @click="generateCartKey">Proceed Payment</button>
                     </div>
                 </div>
             </div>
@@ -113,10 +111,11 @@
         total_shipping: 0,
         estimate_price: 0,
         selected_cart_id: [],
-        process_payment_locker: true
+        process_payment_locker: true,
+        cart_key: ""
     })
 
-    watch(form, (newData)=> {
+    watch(form, async (newData)=> {
         cartCalculation(newData)
     })
 
@@ -182,7 +181,7 @@
 
     }
 
-    const cartCalculation = (form) => {
+    const cartCalculation = async (form) => {
         let finalTotal = 0
         const currentSelectedItem = form.selected_cart_id
         const currentCartItems = cartList.value
@@ -201,6 +200,15 @@
         }
 
         cartStore.selected_cart_item = form.selected_cart_id
+    }
+
+    const generateCartKey = async () => {
+        const result = await cartStore.encryptionCartItem("encrypt", { cart_id: cartStore.selected_cart_item })
+        if(!result.status){
+            return toast.error(result.message)
+        }
+
+        router.push({ name: 'prepayment', params: { cart_key: result.data } })
     }
 
     window.onscroll = function(ev) {
