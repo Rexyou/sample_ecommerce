@@ -54,7 +54,7 @@
                         <span>{{ form.estimate_price.toFixed(2) }}</span>
                     </div>
                     <div class="payment_section">
-                        <button :disabled="form.process_payment_locker" @click="generateCartKey">Proceed Payment</button>
+                        <button :disabled="form.process_payment_locker" @click="generateCartKey">Proceed Payment Preview</button>
                     </div>
                 </div>
             </div>

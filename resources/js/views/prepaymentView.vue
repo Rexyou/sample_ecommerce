@@ -21,6 +21,33 @@
                     <p class="total_price">Total Price: {{ cart.total_price }}</p>
                 </div>
             </div>
+            <div class="total_calculation">
+                <div class="price_list">
+                    <span class="price_title">Total Price: </span>
+                    <div class="price_total">
+                        <span class="price_currency">MYR</span>
+                        <span class="price_amount">{{ form.total_price+".00" }}</span>
+                    </div>
+                </div>
+                <div class="price_list">
+                    <span class="price_title">Total Shipping: </span>
+                    <div class="price_total">
+                        <span class="price_currency">MYR</span>
+                        <span class="price_amount">{{ form.total_shipping+".00" }}</span>
+                    </div>
+                </div>
+                <hr>
+                <div class="price_list">
+                    <span class="price_title">Total Payment: </span>
+                    <div class="price_total">
+                        <span class="price_currency">MYR</span>
+                        <span class="price_amount">{{ form.total_payment+".00" }}</span>
+                    </div>
+                </div>
+                <div class="redirect_button">
+                    <button>Proceed to Payment</button>
+                </div>
+            </div>
         </div>
         <div v-else class="error_message">
             <v-icon name="fa-skull-crossbones"></v-icon>
@@ -43,6 +70,8 @@
     const form = reactive({
         cart_id: [],
         total_price: 0,
+        total_shipping: 0,
+        total_payment: 0
     })
 
     const checkParams = async (params) => {
@@ -53,6 +82,8 @@
                 form.total_price += item.total_price
                 item.total_price = (typeof item.total_price == "number") ? item.total_price+".00" : parseFloat(item.total_price)
             })
+
+            form.total_payment = form.total_price + form.total_shipping
         }
 
         form.cart_id = checker.data
@@ -86,6 +117,7 @@
         height: 200px;
         margin: 30px 0px;
         display: flex;
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     }
 
     .product_image {
@@ -98,7 +130,6 @@
     .product_details {
         width: 70%;
         height: 100%;
-        border: 1px solid rgba(0, 0, 0, 0.5);
         padding: 30px;
         position: relative;
         border-left: none;
@@ -131,6 +162,68 @@
         position: absolute;
         right: 30px;
         bottom: 30px;
+    }
+
+    .total_calculation {
+        width: 45%;
+        border: 1px solid rgba(225, 9, 9, 0.8);
+        padding: 30px;
+        margin: 50px 0px;
+        margin-left: auto;
+    }
+
+    .price_list {
+        display: flex;
+        justify-content: space-between;
+        margin: 15px 0px;
+    }
+
+    hr {
+        height: 2px;
+        background: black;
+        margin: 10px 0px;
+    }
+
+    .price_title {
+        font-size: 24px;
+        font-weight: 700;
+    }
+
+    .price_total {
+        font-size: 32px;
+        display: flex;
+    }
+
+    .price_currency {
+        margin-right: 5px;
+    }
+
+    .price_amount {
+        width: 150px;
+        text-align: right;
+    }
+
+    .redirect_button {
+        width: 100%;
+        margin-top: 30px;
+    }
+
+    .redirect_button button {
+        width: 300px;
+        padding: 20px 30px;
+        border: none;
+        display: block;
+        font-size: 20px;
+        color: white;
+        border-radius: 45px;
+        transition: all 0.2s ease-in-out;
+        background: rgb(22, 250, 22);
+        margin: 0px auto;
+    }
+
+    .redirect_button button:hover {
+        cursor: pointer;
+        background: rgb(0, 197, 0);
     }
 
     .error_message {
