@@ -168,6 +168,7 @@ export const useCartStore = defineStore('cart', {
           } catch (error) {
             console.log("try catch")
             console.log(error)
+            return error
           }  
         },
     }

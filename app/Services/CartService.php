@@ -92,7 +92,16 @@ class CartService{
         }, 'product_option_details'])->where([ 'id'=> $id, 'user_id'=> $user->id ])->first();
 
         if(!$data){
-            $data = [];
+            return errorResponse("", "cart_item_not_found", Response::HTTP_NOT_FOUND);
+        }
+
+        $data->product->filterProductOptions();
+        if($data->product->product_options != null){
+            foreach($data->product_option_details->options as $key => &$value){
+                if(isset($data->product->product_options[$key][$value])){
+                    $value = $data->product->product_options[$key][$value];
+                }
+            }
         }
 
         return successResponse($data);
@@ -101,11 +110,10 @@ class CartService{
     public function updateCurrentCart($id)
     {
         $current_data_detail = $this->getCart($id);
-        $current_data = $current_data_detail['data'];
-
-        if(!$current_data){
-            return errorResponse("", "cart_not_found", Response::HTTP_NOT_FOUND);
+        if(!$current_data_detail['status']){
+            return $current_data_detail;
         }
+        $current_data = $current_data_detail['data'];
 
         $product_option_details = $current_data->product_option_details;
         $current_price = $current_data->per_unit_price;
