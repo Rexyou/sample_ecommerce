@@ -107,11 +107,8 @@
         removeClass()
         const selectedAddress = document.getElementById(`address_item_${newData.selected_address.label}`)
         if(selectedAddress != null){
-            console.log("working")
             selectedAddress.classList.add("active")
         }
-
-        console.log("current form: ", newData)
     })
     
     const removeClass = () => {
@@ -168,7 +165,7 @@
     }
 
     .address_item.active {
-        background: rgb(193, 1, 1);
+        background: rgb(219, 13, 13);
     }
 
     .address_input {
@@ -181,7 +178,7 @@
     }
 
     .address_item:hover {
-        background: yellow;
+        background: rgb(196, 61, 61);
     }
 
     .address_input:checked,
