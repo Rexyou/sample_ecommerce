@@ -398,7 +398,7 @@
     }
 
     .payment_section button {
-        width: 250px;
+        width: 300px;
         height: 50px;
         display: block;
         margin: 10px auto;

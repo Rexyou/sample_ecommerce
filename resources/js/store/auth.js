@@ -81,6 +81,7 @@ export const useAuthStore = defineStore('auth', {
                     console.log("update profile: ")
                     console.log(response.data.data)
                     toast.success("Update profile success");
+                    console.log("update working")
                 })
                 .catch(async (error)=> {
                     this.process = false
